@@ -1,0 +1,43 @@
+/* ==================== 91约拍Pro 设计系统 ==================== */
+/* 马卡龙奢华风格 - Macaron Luxury Design System */
+
+/* 色彩变量 */
+:root {
+  /* 马卡龙主色 */
+  --macaron-rose: #F472B6;
+  --macaron-pink: #EC4899;
+  --macaron-violet: #A78BFA;
+  --macaron-purple: #8B5CF6;
+  --macaron-sky: #38BDF8;
+  --macaron-mint: #34D399;
+  --macaron-amber: #FBBF24;
+  --macaron-peach: #FB923C;
+
+  /* 中性色 */
+  --ink-900: #0F172A;
+  --ink-700: #334155;
+  --ink-500: #64748B;
+  --ink-300: #CBD5E1;
+  --ink-100: #F1F5F9;
+  --surface: #FFFFFF;
+  --surface-tint: rgba(255,255,255,0.85);
+
+  /* 渐变 */
+  --gradient-primary: linear-gradient(135deg, #F472B6 0%, #A78BFA 100%);
+  --gradient-warm: linear-gradient(135deg, #FB923C 0%, #F472B6 100%);
+  --gradient-cool: linear-gradient(135deg, #38BDF8 0%, #34D399 100%);
+  --gradient-rose: linear-gradient(135deg, #EC4899 0%, #F472B6 50%, #A78BFA 100%);
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 3px rgba(244,114,182,0.08);
+  --shadow-md: 0 4px 12px rgba(244,114,182,0.12);
+  --shadow-lg: 0 8px 30px rgba(244,114,182,0.15);
+  --shadow-xl: 0 20px 60px rgba(167,139,250,0.2);
+
+  /* 圆角 */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+}
