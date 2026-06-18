@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>91约拍Pro 管理后台</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.7.0/dist/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.4.0/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/element-plus@2.7.0/dist/index.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; }
+    .admin-container { display: flex; min-height: 100vh; }
+    .sidebar { width: 220px; background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); color: #fff; flex-shrink: 0; }
+    .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-header h2 { font-size: 18px; color: #b388ff; margin-bottom: 4px; }
+    .sidebar-header p { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .menu-list { padding: 10px 0; }
+    .menu-item { padding: 14px 24px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.3s; font-size: 14px; color: rgba(255,255,255,0.7); }
+    .menu-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .menu-item.active { background: rgba(107, 52, 232, 0.3); color: #b388ff; border-right: 3px solid #b388ff; }
+    .menu-icon { font-size: 18px; width: 20px; text-align: center; }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .header { height: 56px; background: #fff; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .header h3 { font-size: 16px; color: #333; }
+    .content-area { flex: 1; padding: 20px; overflow-y: auto; }
+    .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+    .stat-card { background: #fff; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .stat-value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 14px; color: #999; }
+    .stat-high .stat-value { color: #f56c6c; }
+    .stat-medium .stat-value { color: #e6a23c; }
+    .stat-low .stat-value { color: #909399; }
+    .stat-purple .stat-value { color: #6734e8; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 16px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+    .card-header span { font-weight: 600; color: #333; }
+    .card-body { padding: 20px; }
+    .search-form { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .search-form .el-input, .search-form .el-select { width: 180px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    th { background: #fafafa; font-weight: 600; color: #333; }
+    tr:hover { background: #f5f7fa; }
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; }
+    .tag-pending { background: #fdf6ec; color: #e6a23c; }
+    .tag-approved, .tag-success { background: #f0f9eb; color: #67c23a; }
+    .tag-rejected, .tag-danger { background: #fef0f0; color: #f56c6c; }
+    .tag-primary { background: #ecf5ff; color: #409eff; }
+    .tag-info { background: #f4f4f5; color: #909399; }
+    .tag-warning { background: #fdf6ec; color: #e6a23c; }
+    .tag-high { background: #fef0f0; color: #f56c6c; font-weight: 600; }
+    .tag-medium { background: #fdf6ec; color: #e6a23c; }
+    .btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .btn-primary { background: #6734e8; color: #fff; }
+    .btn-primary:hover { background: #7c4ddb; }
+    .btn-success { background: #67c23a; color: #fff; }
+    .btn-danger { background: #f56c6c; color: #fff; }
+    .btn-warning { background: #e6a23c; color: #fff; }
+    .btn-text { background: none; color: #6734e8; padding: 4px 8px; }
+    .btn-text:hover { color: #7c4ddb; }
+    .btn-sm { padding: 4px 10px; font-size: 12px; }
+    .amount { color: #f56c6c; font-weight: 600; }
+    .user-cell { display: flex; align-items: center; gap: 8px; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #e8e8e8; }
+    .actions { display: flex; gap: 6px; }
+    .progress-bar { width: 80px; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
+    .progress-fill { height: 100%; border-radius: 4px; }
+    .tabs { display: flex; border-bottom: 2px solid #f0f0f0; margin-bottom: 16px; }
+    .tab { padding: 10px 20px; cursor: pointer; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab:hover { color: #6734e8; }
+    .tab.active { color: #6734e8; border-bottom-color: #6734e8; font-weight: 600; }
+    .pagination { display: flex; justify-content: flex-end; margin-top: 16px; gap: 4px; }
+    .page-btn { padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; }
+    .page-btn.active { background: #6734e8; color: #fff; border-color: #6734e8; }
+    .empty-row td { text-align: center; color: #999; padding: 40px; }
+    .risk-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="admin-container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>91约拍Pro</h2>
+        <p>管理后台</p>
+      </div>
+      <div class="menu-list">
+        <div class="menu-item" :class="{active: current==='cert'}" @click="current='cert'">
+          <span class="menu-icon">📋</span> 认证审核
+        </div>
+        <div class="menu-item" :class="{active: current==='aftersale'}" @click="current='aftersale'">
+          <span class="menu-icon">🔄</span> 售后管理
+        </div>
+        <div class="menu-item" :class="{active: current==='operation'}" @click="current='operation'">
+          <span class="menu-icon">📢</span> 运营管理
+        </div>
+        <div class="menu-item" :class="{active: current==='risk'}" @click="current='risk'">
+          <span class="menu-icon">🛡️</span> 风控中心
+        </div>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+      <div class="header">
+        <h3>{{ menuTitles[current] }}</h3>
+        <span style="color:#999;font-size:13px">{{ currentTime }}</span>
+      </div>
+      <div class="content-area">
+
+        <!-- ========== 认证审核 ========== -->
+        <template v-if="current==='cert'">
+          <div class="card">
+            <div class="card-body">
+              <div class="search-form">
+                <el-input v-model="certSearch.name" placeholder="用户姓名" clearable size="default" />
+                <el-input v-model="certSearch.phone" placeholder="手机号" clearable size="default" />
+                <el-select v-model="certSearch.certType" placeholder="认证类型" clearable size="default">
+                  <el-option label="实名认证" value="realname" />
+                  <el-option label="摄影师认证" value="photographer" />
+                  <el-option label="模特认证" value="model" />
+                  <el-option label="商家认证" value="merchant" />
+                </el-select>
+                <el-select v-model="certSearch.status" placeholder="审核状态" clearable size="default">
+                  <el-option label="待审核" value="pending" />
+                  <el-option label="已通过" value="approved" />
+                  <el-option label="已驳回" value="rejected" />
+                </el-select>
+                <el-button type="primary" @click="loadCerts">搜索</el-button>
+                <el-button @click="certSearch={name:'',phone:'',certType:'',status:''};loadCerts()">重置</el-button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <span>认证审核列表</span>
+              <div>
+                <el-button size="small" type="success" plain @click="batchCert('approved')">批量通过</el-button>
+                <el-button size="small" type="danger" plain @click="batchCert('rejected')">批量驳回</el-button>
+              </div>
+            </div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px"><input type="checkbox" @change="toggleAllCerts" /></th>
+                    <th>用户信息</th>
+                    <th>认证类型</th>
+                    <th>提交时间</th>
+                    <th>审核状态</th>
+                    <th>审核人</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="r in certList" :key="r.id">
+                    <td><input type="checkbox" v-model="r._checked" /></td>
+                    <td><div class="user-cell"><span>{{ r.name }}</span><span style="color:#999;font-size:12px">{{ r.phone }}</span></div></td>
+                    <td><span class="tag" :class="'tag-'+({realname:'info',photographer:'primary',model:'warning',merchant:'success'}[r.cert_type])">{{ certTypeLabels[r.cert_type] }}</span></td>
+                    <td>{{ r.submit_time }}</td>
+                    <td><span class="tag" :class="'tag-'+r.status">{{ statusLabels[r.status] }}</span></td>
+                    <td>{{ r.reviewer || '-' }}</td>
+                    <td>
+                      <div class="actions">
+                        <button class="btn btn-text btn-sm" @click="viewCert(r)">查看</button>
+                        <template v-if="r.status==='pending'">
+                          <button class="btn btn-text btn-sm" style="color:#67c23a" @click="reviewCert(r,'approved')">通过</button>
+                          <button class="btn btn-text btn-sm" style="color:#f56c6c" @click="reviewCert(r,'rejected')">驳回</button>
+                        </template>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="!certList.length" class="empty-row"><td colspan="7">暂无数据</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+
+        <!-- ========== 售后管理 ========== -->
+        <template v-if="current==='aftersale'">
+          <div class="stat-cards">
+            <div class="stat-card stat-medium"><div class="stat-value">{{ refundStats.pending }}</div><div class="stat-label">待处理退款</div></div>
+            <div class="stat-card stat-purple"><div class="stat-value">{{ refundStats.processing }}</div><div class="stat-label">处理中</div></div>
+            <div class="stat-card stat-low"><div class="stat-value">{{ refundStats.completed }}</div><div class="stat-label">已完成</div></div>
+            <div class="stat-card stat-high"><div class="stat-value">{{ complaintList.length }}</div><div class="stat-label">投诉工单</div></div>
+          </div>
+          <div class="tabs">
+            <div class="tab" :class="{active: aftersaleTab==='refund'}" @click="aftersaleTab='refund'">退款申请</div>
+            <div class="tab" :class="{active: aftersaleTab==='complaint'}" @click="aftersaleTab='complaint'">投诉工单</div>
+            <div class="tab" :class="{active: aftersaleTab==='dispute'}" @click="aftersaleTab='dispute'">争议处理</div>
+          </div>
+          <!-- 退款 -->
+          <div class="card" v-if="aftersaleTab==='refund'">
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>订单号</th><th>买家</th><th>卖家</th><th>金额</th><th>退款原因</th><th>状态</th><th>提交时间</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="r in refundList" :key="r.id">
+                    <td>{{ r.order_no }}</td><td>{{ r.buyer_name }}</td><td>{{ r.seller_name }}</td>
+                    <td><span class="amount">¥{{ r.amount }}</span></td><td>{{ r.reason }}</td>
+                    <td><span class="tag" :class="'tag-'+r.status">{{ statusLabels[r.status] }}</span></td>
+                    <td>{{ r.submit_time }}</td>
+                    <td>
+                      <div class="actions" v-if="r.status==='pending'">
+                        <button class="btn btn-success btn-sm" @click="processRefund(r,'completed')">同意退款</button>
+                        <button class="btn btn-danger btn-sm" @click="processRefund(r,'rejected')">驳回</button>
+                      </div>
+                      <span v-else style="color:#999">-</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 投诉 -->
+          <div class="card" v-if="aftersaleTab==='complaint'">
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>关联订单</th><th>投诉人</th><th>被投诉人</th><th>类型</th><th>描述</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="c in complaintList" :key="c.id">
+                    <td>{{ c.order_no }}</td><td>{{ c.complainant }}</td><td>{{ c.respondent }}</td>
+                    <td><span class="tag tag-primary">{{ c.type }}</span></td>
+                    <td>{{ c.description }}</td>
+                    <td><span class="tag" :class="'tag-'+c.status">{{ statusLabels[c.status] }}</span></td>
+                    <td><button class="btn btn-text btn-sm">详情</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 争议 -->
+          <div class="card" v-if="aftersaleTab==='dispute'">
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>争议编号</th><th>关联订单</th><th>申请人</th><th>类型</th><th>金额</th><th>状态</th><th>处理期限</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="d in disputeList" :key="d.id">
+                    <td>{{ d.dispute_no }}</td><td>{{ d.order_no }}</td><td>{{ d.applicant }}</td>
+                    <td><span class="tag tag-warning">{{ d.type }}</span></td>
+                    <td><span class="amount">¥{{ d.amount }}</span></td>
+                    <td><span class="tag" :class="'tag-'+d.status">{{ statusLabels[d.status] }}</span></td>
+                    <td>{{ d.deadline }}</td>
+                    <td><button class="btn btn-warning btn-sm" v-if="d.status==='pending'">仲裁</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+
+        <!-- ========== 运营管理 ========== -->
+        <template v-if="current==='operation'">
+          <div class="tabs">
+            <div class="tab" :class="{active: opTab==='banner'}" @click="opTab='banner'">轮播图管理</div>
+            <div class="tab" :class="{active: opTab==='activity'}" @click="opTab='activity'">活动管理</div>
+            <div class="tab" :class="{active: opTab==='coupon'}" @click="opTab='coupon'">优惠券管理</div>
+            <div class="tab" :class="{active: opTab==='notice'}" @click="opTab='notice'">公告管理</div>
+          </div>
+          <!-- 轮播图 -->
+          <div class="card" v-if="opTab==='banner'">
+            <div class="card-header"><span>轮播图列表</span><el-button type="primary" size="small" @click="ElMessage.info('新增轮播图')">新增</el-button></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>预览</th><th>标题</th><th>链接</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="b in bannerList" :key="b.id">
+                    <td><img :src="b.image" style="width:100px;height:50px;object-fit:cover;border-radius:4px" /></td>
+                    <td>{{ b.title }}</td><td style="color:#999;font-size:12px">{{ b.link }}</td><td>{{ b.sort }}</td>
+                    <td><span class="tag" :class="b.status?'tag-success':'tag-info'">{{ b.status?'启用':'禁用' }}</span></td>
+                    <td><div class="actions"><button class="btn btn-text btn-sm">编辑</button><button class="btn btn-text btn-sm" style="color:#f56c6c" @click="deleteBanner(b)">删除</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 活动 -->
+          <div class="card" v-if="opTab==='activity'">
+            <div class="card-header"><span>活动列表</span><el-button type="primary" size="small" @click="ElMessage.info('新增活动')">新增</el-button></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>活动名称</th><th>类型</th><th>开始时间</th><th>结束时间</th><th>参与人数</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="a in activityList" :key="a.id">
+                    <td>{{ a.name }}</td>
+                    <td><span class="tag tag-primary">{{ {discount:'优惠活动',competition:'比赛活动',promotion:'推广活动'}[a.type] || a.type }}</span></td>
+                    <td>{{ a.start_time }}</td><td>{{ a.end_time }}</td><td>{{ a.participants }}</td>
+                    <td><span class="tag" :class="{'tag-success':a.status==='ongoing','tag-info':a.status==='upcoming','tag-danger':a.status==='ended'}">{{ {ongoing:'进行中',upcoming:'未开始',ended:'已结束'}[a.status] }}</span></td>
+                    <td><div class="actions"><button class="btn btn-text btn-sm">编辑</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 优惠券 -->
+          <div class="card" v-if="opTab==='coupon'">
+            <div class="card-header"><span>优惠券列表</span><el-button type="primary" size="small" @click="ElMessage.info('新增优惠券')">新增</el-button></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>名称</th><th>类型</th><th>面额</th><th>使用条件</th><th>有效期</th><th>发放/使用</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="c in couponList" :key="c.id">
+                    <td>{{ c.name }}</td>
+                    <td><span class="tag" :class="c.type==='满减'?'tag-primary':'tag-success'">{{ c.type }}</span></td>
+                    <td><span class="amount">¥{{ c.amount }}</span></td>
+                    <td>{{ c.condition_amount>0 ? '满'+c.condition_amount+'可用' : '无门槛' }}</td>
+                    <td>{{ c.start_date }} ~ {{ c.end_date }}</td>
+                    <td>{{ c.used_count }}/{{ c.total_count }}</td>
+                    <td><span class="tag" :class="{'tag-success':c.status==='active','tag-info':c.status==='upcoming','tag-danger':c.status==='ended'}">{{ {active:'进行中',upcoming:'未开始',ended:'已结束'}[c.status] }}</span></td>
+                    <td><div class="actions"><button class="btn btn-text btn-sm">编辑</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 公告 -->
+          <div class="card" v-if="opTab==='notice'">
+            <div class="card-header"><span>公告列表</span><el-button type="primary" size="small" @click="ElMessage.info('发布公告')">发布公告</el-button></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>标题</th><th>类型</th><th>发布人</th><th>阅读量</th><th>状态</th><th>发布时间</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="n in noticeList" :key="n.id">
+                    <td>{{ n.title }}</td>
+                    <td><span class="tag" :class="{'tag-primary':n.type==='system','tag-success':n.type==='activity','tag-warning':n.type==='update','tag-danger':n.type==='security'}">{{ {system:'系统公告',activity:'活动公告',update:'更新公告',security:'安全公告'}[n.type] }}</span></td>
+                    <td>{{ n.publisher }}</td><td>{{ n.view_count }}</td>
+                    <td><span class="tag" :class="n.status?'tag-success':'tag-info'">{{ n.status?'已发布':'草稿' }}</span></td>
+                    <td>{{ n.publish_time || '-' }}</td>
+                    <td><div class="actions"><button class="btn btn-text btn-sm">编辑</button><button class="btn btn-text btn-sm" style="color:#f56c6c">删除</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+
+        <!-- ========== 风控中心 ========== -->
+        <template v-if="current==='risk'">
+          <div class="stat-cards">
+            <div class="stat-card stat-high"><div class="stat-value">{{ riskStats.high }}</div><div class="stat-label">高风险</div></div>
+            <div class="stat-card stat-medium"><div class="stat-value">{{ riskStats.medium }}</div><div class="stat-label">中风险</div></div>
+            <div class="stat-card stat-low"><div class="stat-value">{{ riskStats.low }}</div><div class="stat-label">低风险</div></div>
+            <div class="stat-card stat-purple"><div class="stat-value">{{ blockedList.filter(b=>b.status==='active').length }}</div><div class="stat-label">封禁中</div></div>
+          </div>
+          <div class="tabs">
+            <div class="tab" :class="{active: riskTab==='transaction'}" @click="riskTab='transaction'">风险交易</div>
+            <div class="tab" :class="{active: riskTab==='blocked'}" @click="riskTab='blocked'">封禁管理</div>
+            <div class="tab" :class="{active: riskTab==='rules'}" @click="riskTab='rules'">风控规则</div>
+            <div class="tab" :class="{active: riskTab==='log'}" @click="riskTab='log'">操作日志</div>
+          </div>
+          <!-- 风险交易 -->
+          <div class="card" v-if="riskTab==='transaction'">
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>订单号</th><th>用户</th><th>金额</th><th>风险等级</th><th>风险原因</th><th>状态</th><th>触发时间</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="t in riskTxList" :key="t.id">
+                    <td>{{ t.order_no }}</td><td>{{ t.user_name }}</td>
+                    <td><span class="amount">¥{{ t.amount }}</span></td>
+                    <td><span class="tag" :class="'tag-'+t.level">{{ {high:'高风险',medium:'中风险',low:'低风险'}[t.level] }}</span></td>
+                    <td>{{ t.reason }}</td>
+                    <td><span class="tag" :class="'tag-'+t.status">{{ statusLabels[t.status] }}</span></td>
+                    <td>{{ t.trigger_time }}</td>
+                    <td>
+                      <div class="actions" v-if="t.status==='pending'">
+                        <button class="btn btn-success btn-sm" @click="processRiskTx(t,'resolved')">确认正常</button>
+                        <button class="btn btn-danger btn-sm" @click="processRiskTx(t,'blocked')">封禁</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 封禁管理 -->
+          <div class="card" v-if="riskTab==='blocked'">
+            <div class="card-header"><span>封禁列表</span><el-button type="danger" size="small" @click="ElMessage.info('手动封禁')">手动封禁</el-button></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>用户</th><th>封禁类型</th><th>封禁原因</th><th>封禁时间</th><th>解封时间</th><th>操作人</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="b in blockedList" :key="b.id">
+                    <td>{{ b.user_name }}</td>
+                    <td><span class="tag" :class="b.block_type==='permanent'?'tag-danger':'tag-warning'">{{ b.block_type==='permanent'?'永久封禁':'临时封禁' }}</span></td>
+                    <td>{{ b.reason }}</td><td>{{ b.block_time }}</td><td>{{ b.expire_time || '永久' }}</td><td>{{ b.operator }}</td>
+                    <td><span class="tag" :class="b.status==='active'?'tag-danger':'tag-info'">{{ b.status==='active'?'封禁中':'已解封' }}</span></td>
+                    <td><button class="btn btn-warning btn-sm" v-if="b.status==='active'" @click="unblockUser(b)">解封</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 风控规则 -->
+          <div class="card" v-if="riskTab==='rules'">
+            <div class="card-header"><span>风控规则</span><el-button type="primary" size="small" @click="ElMessage.info('新增规则')">新增规则</el-button></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>规则名称</th><th>类型</th><th>描述</th><th>触发次数</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="r in ruleList" :key="r.id">
+                    <td>{{ r.name }}</td>
+                    <td><span class="tag tag-primary">{{ r.type }}</span></td>
+                    <td>{{ r.description }}</td><td>{{ r.trigger_count }}</td>
+                    <td><span class="tag" :class="r.status?'tag-success':'tag-info'">{{ r.status?'启用':'禁用' }}</span></td>
+                    <td><div class="actions"><button class="btn btn-text btn-sm">编辑</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- 操作日志 -->
+          <div class="card" v-if="riskTab==='log'">
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>ID</th><th>类型</th><th>操作对象</th><th>描述</th><th>操作人</th><th>IP</th><th>时间</th></tr></thead>
+                <tbody>
+                  <tr v-for="l in logList" :key="l.id">
+                    <td>{{ l.id }}</td>
+                    <td><span class="tag" :class="{'tag-danger':l.type==='block','tag-success':l.type==='unblock','tag-warning':l.type==='refund','tag-primary':l.type==='rule'}">{{ {block:'封禁',unblock:'解封',refund:'退款',rule:'规则变更'}[l.type] }}</span></td>
+                    <td>{{ l.target }}</td><td>{{ l.description }}</td><td>{{ l.operator }}</td><td>{{ l.ip }}</td><td>{{ l.operate_time }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, reactive, onMounted, computed } = Vue;
+const { ElMessage, ElMessageBox } = ElementPlus;
+
+const API = '/api';
+
+const app = createApp({
+  setup() {
+    const current = ref('cert');
+    const currentTime = ref(new Date().toLocaleString('zh-CN'));
+
+    const menuTitles = { cert: '认证审核', aftersale: '售后管理', operation: '运营管理', risk: '风控中心' };
+    const certTypeLabels = { realname: '实名认证', photographer: '摄影师认证', model: '模特认证', merchant: '商家认证' };
+    const statusLabels = { pending: '待处理', approved: '已通过', rejected: '已驳回', completed: '已完成', processing: '处理中', resolved: '已处理', ignored: '已忽略', blocked: '已封禁', active: '封禁中', ongoing: '进行中', upcoming: '未开始', ended: '已结束' };
+
+    // 认证审核
+    const certSearch = reactive({ name: '', phone: '', certType: '', status: '' });
+    const certList = ref([]);
+    const loadCerts = async () => {
+      const params = new URLSearchParams();
+      if (certSearch.name) params.append('name', certSearch.name);
+      if (certSearch.phone) params.append('phone', certSearch.phone);
+      if (certSearch.certType) params.append('certType', certSearch.certType);
+      if (certSearch.status) params.append('status', certSearch.status);
+      const res = await fetch(`${API}/cert-review/list?${params}`);
+      const data = await res.json();
+      certList.value = (data.data?.list || []).map(r => ({ ...r, _checked: false }));
+    };
+    const reviewCert = async (row, status) => {
+      const action = status === 'approved' ? '通过' : '驳回';
+      if (status === 'rejected') {
+        try {
+          const { value } = await ElMessageBox.prompt('请输入驳回原因', action, { inputType: 'textarea' });
+          await fetch(`${API}/cert-review/reject`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: row.id, remark: value }) });
+        } catch { return; }
+      } else {
+        await fetch(`${API}/cert-review/approve`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: row.id }) });
+      }
+      ElMessage.success(`${action}成功`);
+      loadCerts();
+    };
+    const batchCert = async (status) => {
+      const selected = certList.value.filter(r => r._checked && r.status === 'pending');
+      if (!selected.length) { ElMessage.warning('请选择待审核记录'); return; }
+      try {
+        await ElMessageBox.confirm(`确认${status==='approved'?'通过':'驳回'} ${selected.length} 条记录？`, '批量操作');
+        for (const r of selected) {
+          await fetch(`${API}/cert-review/${status==='approved'?'approve':'reject'}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: r.id }) });
+        }
+        ElMessage.success('批量操作成功');
+        loadCerts();
+      } catch {}
+    };
+    const viewCert = (row) => { ElMessage.info(`查看 ${row.name} 的认证详情`); };
+    const toggleAllCerts = (e) => { certList.value.forEach(r => r._checked = e.target.checked); };
+
+    // 售后
+    const aftersaleTab = ref('refund');
+    const refundList = ref([]);
+    const complaintList = ref([]);
+    const disputeList = ref([]);
+    const refundStats = reactive({ pending: 0, processing: 0, completed: 0 });
+    const loadAftersale = async () => {
+      const [r1, r2, r3] = await Promise.all([
+        fetch(`${API}/refund/list`).then(r => r.json()),
+        fetch(`${API}/complaint/list`).then(r => r.json()),
+        fetch(`${API}/dispute/list`).then(r => r.json())
+      ]);
+      refundList.value = r1.data?.list || [];
+      complaintList.value = r2.data?.list || [];
+      disputeList.value = r3.data?.list || [];
+      refundStats.pending = refundList.value.filter(r => r.status === 'pending').length;
+      refundStats.processing = refundList.value.filter(r => r.status === 'processing').length;
+      refundStats.completed = refundList.value.filter(r => r.status === 'completed').length;
+    };
+    const processRefund = async (row, status) => {
+      const action = status === 'completed' ? '同意退款' : '驳回';
+      try {
+        await ElMessageBox.confirm(`确认${action}？`, '操作确认');
+        await fetch(`${API}/refund/process`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: row.id, status }) });
+        ElMessage.success(`${action}成功`);
+        loadAftersale();
+      } catch {}
+    };
+
+    // 运营
+    const opTab = ref('banner');
+    const bannerList = ref([]);
+    const activityList = ref([]);
+    const couponList = ref([]);
+    const noticeList = ref([]);
+    const loadOperation = async () => {
+      const [r1, r2, r3, r4] = await Promise.all([
+        fetch(`${API}/banner/list`).then(r => r.json()),
+        fetch(`${API}/activity/list`).then(r => r.json()),
+        fetch(`${API}/coupon/list`).then(r => r.json()),
+        fetch(`${API}/notice/list`).then(r => r.json())
+      ]);
+      bannerList.value = r1.data || [];
+      activityList.value = r2.data || [];
+      couponList.value = r3.data || [];
+      noticeList.value = r4.data || [];
+    };
+    const deleteBanner = async (row) => {
+      try {
+        await ElMessageBox.confirm('确认删除该轮播图？', '确认删除');
+        await fetch(`${API}/banner/delete`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: row.id }) });
+        ElMessage.success('删除成功');
+        loadOperation();
+      } catch {}
+    };
+
+    // 风控
+    const riskTab = ref('transaction');
+    const riskTxList = ref([]);
+    const blockedList = ref([]);
+    const ruleList = ref([]);
+    const logList = ref([]);
+    const riskStats = reactive({ high: 0, medium: 0, low: 0 });
+    const loadRisk = async () => {
+      const [r1, r2, r3, r4] = await Promise.all([
+        fetch(`${API}/risk/transaction/list`).then(r => r.json()),
+        fetch(`${API}/risk/blocked/list`).then(r => r.json()),
+        fetch(`${API}/risk/rule/list`).then(r => r.json()),
+        fetch(`${API}/risk/log/list`).then(r => r.json())
+      ]);
+      riskTxList.value = r1.data?.list || [];
+      blockedList.value = r2.data || [];
+      ruleList.value = r3.data || [];
+      logList.value = r4.data?.list || [];
+      riskStats.high = riskTxList.value.filter(t => t.level === 'high').length;
+      riskStats.medium = riskTxList.value.filter(t => t.level === 'medium').length;
+      riskStats.low = riskTxList.value.filter(t => t.level === 'low').length;
+    };
+    const processRiskTx = async (row, status) => {
+      try {
+        await ElMessageBox.confirm(status === 'resolved' ? '确认该交易正常？' : '确认封禁该用户？', '操作确认');
+        await fetch(`${API}/risk/transaction/process`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: row.id, status }) });
+        ElMessage.success('操作成功');
+        loadRisk();
+      } catch {}
+    };
+    const unblockUser = async (row) => {
+      try {
+        await ElMessageBox.confirm(`确认解封 ${row.user_name}？`, '解封确认');
+        await fetch(`${API}/risk/blocked/unblock`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: row.id }) });
+        ElMessage.success('已解封');
+        loadRisk();
+      } catch {}
+    };
+
+    // 加载数据
+    const loadAll = () => { loadCerts(); loadAftersale(); loadOperation(); loadRisk(); };
+    onMounted(() => {
+      loadAll();
+      setInterval(() => { currentTime.value = new Date().toLocaleString('zh-CN'); }, 1000);
+    });
+
+    return {
+      current, currentTime, menuTitles, certTypeLabels, statusLabels,
+      certSearch, certList, loadCerts, reviewCert, batchCert, viewCert, toggleAllCerts,
+      aftersaleTab, refundList, complaintList, disputeList, refundStats, processRefund,
+      opTab, bannerList, activityList, couponList, noticeList, deleteBanner,
+      riskTab, riskTxList, blockedList, ruleList, logList, riskStats, processRiskTx, unblockUser,
+      ElMessage
+    };
+  }
+});
+app.use(ElementPlus);
+app.mount('#app');
+</script>
+</body>
+</html>
