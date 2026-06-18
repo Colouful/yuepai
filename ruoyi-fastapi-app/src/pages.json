@@ -33,13 +33,15 @@
     {
       "path": "pages/works/index",
       "style": {
-        "navigationBarTitleText": "作品广场"
+        "navigationBarTitleText": "作品广场",
+        "navigationStyle": "custom"
       }
     },
     {
       "path": "pages/publish/index",
       "style": {
-        "navigationBarTitleText": "发布约拍"
+        "navigationBarTitleText": "发布约拍",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -57,7 +59,8 @@
     {
       "path": "pages/message/index",
       "style": {
-        "navigationBarTitleText": "消息中心"
+        "navigationBarTitleText": "消息中心",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -100,7 +103,8 @@
     {
       "path": "pages/mine/index",
       "style": {
-        "navigationBarTitleText": "我的"
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -352,27 +356,39 @@
     }
   ],
   "tabBar": {
-    "color": "#000000",
-    "selectedColor": "#000000",
+    "color": "#94a3b8",
+    "selectedColor": "#e11d48",
     "borderStyle": "white",
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "rgba(255,255,255,0.95)",
     "list": [
       {
         "pagePath": "pages/index",
         "iconPath": "static/images/tabbar/home.png",
-        "selectedIconPath": "static/images/tabbar/home_.png",
+        "selectedIconPath": "static/images/tabbar/home-active.png",
         "text": "首页"
       },
       {
-        "pagePath": "pages/work/index",
-        "iconPath": "static/images/tabbar/work.png",
-        "selectedIconPath": "static/images/tabbar/work_.png",
-        "text": "工作台"
+        "pagePath": "pages/works/index",
+        "iconPath": "static/images/tabbar/discover.png",
+        "selectedIconPath": "static/images/tabbar/discover-active.png",
+        "text": "发现"
+      },
+      {
+        "pagePath": "pages/publish/index",
+        "iconPath": "static/images/tabbar/publish.png",
+        "selectedIconPath": "static/images/tabbar/publish-active.png",
+        "text": "发布"
+      },
+      {
+        "pagePath": "pages/message/index",
+        "iconPath": "static/images/tabbar/message.png",
+        "selectedIconPath": "static/images/tabbar/message-active.png",
+        "text": "消息"
       },
       {
         "pagePath": "pages/mine/index",
         "iconPath": "static/images/tabbar/mine.png",
-        "selectedIconPath": "static/images/tabbar/mine_.png",
+        "selectedIconPath": "static/images/tabbar/mine-active.png",
         "text": "我的"
       }
     ]
