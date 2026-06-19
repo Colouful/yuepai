@@ -169,6 +169,6 @@ function showFilter() {
 }
 
 function openWork(item) {
-  proxy.$tab.navigateTo(`/pages/profile/index?id=${item.id}`);
+  proxy.$tab.navigateTo(`/pages/works/detail?id=${item.id}`);
 }
 </script>
