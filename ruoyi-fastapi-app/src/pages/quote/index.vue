@@ -6,7 +6,6 @@
       <text class="text-base font-black text-zinc-900">报价详情</text>
       <view class="size-10 rounded-full bg-white border border-black/5 flex items-center justify-center" @click="showRules"><view class="i-lucide-circle-help text-zinc-700 text-lg"></view></view>
     </view>
-
     <scroll-view scroll-y :show-scrollbar="false" :style="{ height: scrollH + 'px' }">
       <view class="px-5 pb-28 space-y-4">
         <view class="yp-card-strong p-5 relative overflow-hidden">
@@ -15,10 +14,9 @@
             <view class="flex items-center justify-between"><view class="rounded-full bg-white/10 px-3 py-1.5 text-[10px] text-white/75">摄影师报价</view><text class="text-[10px] text-white/45">{{ quote.expireText }}</text></view>
             <text class="text-4xl font-black text-white block mt-5">¥{{ quote.total }}</text>
             <text class="text-xs text-white/55 block mt-2">{{ quote.packageName }} · {{ quote.creator }}</text>
-            <view class="mt-5 flex items-center justify-between"><text class="text-[10px] text-white/45">报价编号 {{ quote.no }}</text><view class="rounded-full bg-emerald-500/20 px-3 py-1 text-[9px] text-emerald-200">平台担保交易</view></div>
+            <view class="mt-5 flex items-center justify-between"><text class="text-[10px] text-white/45">报价编号 {{ quote.no }}</text><view class="rounded-full bg-emerald-500/20 px-3 py-1 text-[9px] text-emerald-200">平台担保交易</view></view>
           </view>
         </view>
-
         <view class="yp-card p-4">
           <text class="yp-section-title block mb-4">费用明细</text>
           <view class="space-y-3">
@@ -27,28 +25,15 @@
             <view class="flex items-center justify-between"><text class="text-sm font-black text-zinc-900">合计</text><text class="text-xl font-black text-rose-500">¥{{ quote.total }}</text></view>
           </view>
         </view>
-
         <view class="yp-card p-4">
           <text class="yp-section-title block mb-4">服务内容</text>
-          <view class="grid grid-cols-2 gap-3">
-            <view v-for="item in serviceItems" :key="item.label" class="rounded-2xl bg-zinc-50 p-3"><view class="flex items-center"><view :class="item.icon" class="text-sm text-rose-500 mr-2"></view><text class="text-[10px] text-zinc-400">{{ item.label }}</text></view><text class="text-xs font-bold text-zinc-800 block mt-2">{{ item.value }}</text></view>
-          </view>
+          <view class="grid grid-cols-2 gap-3"><view v-for="item in serviceItems" :key="item.label" class="rounded-2xl bg-zinc-50 p-3"><view class="flex items-center"><view :class="item.icon" class="text-sm text-rose-500 mr-2"></view><text class="text-[10px] text-zinc-400">{{ item.label }}</text></view><text class="text-xs font-bold text-zinc-800 block mt-2">{{ item.value }}</text></view></view>
         </view>
-
-        <view class="yp-card p-4">
-          <text class="yp-section-title block mb-3">补充说明</text>
-          <text class="text-xs text-zinc-500 leading-relaxed">{{ quote.remark }}</text>
-        </view>
-
+        <view class="yp-card p-4"><text class="yp-section-title block mb-3">补充说明</text><text class="text-xs text-zinc-500 leading-relaxed">{{ quote.remark }}</text></view>
         <view class="rounded-2xl bg-emerald-50 p-4 flex items-start"><view class="i-lucide-shield-check text-emerald-600 text-base mt-0.5 mr-3"></view><view><text class="text-xs font-black text-emerald-800 block">平台资金担保</text><text class="text-[10px] text-emerald-700 leading-relaxed block mt-1">款项由平台托管，完成拍摄并确认交付后再结算给服务方。</text></view></view>
       </view>
     </scroll-view>
-
-    <view class="fixed left-0 right-0 bottom-0 z-40 bg-white/95 backdrop-blur-sm border-t border-black/5 px-5 pt-3 pb-6 flex items-center space-x-3">
-      <view class="flex-1 h-12 rounded-2xl border border-black/10 flex items-center justify-center text-sm font-bold text-zinc-700" @click="negotiateVisible = true">发起议价</view>
-      <view class="flex-1 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-sm font-black text-white" @click="acceptQuote">接受报价</view>
-    </view>
-
+    <view class="fixed left-0 right-0 bottom-0 z-40 bg-white/95 backdrop-blur-sm border-t border-black/5 px-5 pt-3 pb-6 flex items-center space-x-3"><view class="flex-1 h-12 rounded-2xl border border-black/10 flex items-center justify-center text-sm font-bold text-zinc-700" @click="negotiateVisible = true">发起议价</view><view class="flex-1 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-sm font-black text-white" @click="acceptQuote">接受报价</view></view>
     <view v-if="negotiateVisible" class="fixed inset-0 z-50 flex items-end" @click="negotiateVisible = false">
       <view class="absolute inset-0 bg-black/35"></view>
       <view class="relative w-full rounded-t-[28px] bg-white px-5 pt-5 pb-8" @click.stop>
@@ -60,7 +45,6 @@
     </view>
   </view>
 </template>
-
 <script setup>
 import { getCurrentInstance, reactive, ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
@@ -72,7 +56,7 @@ const quote = reactive({ no: "QT20260618001", creator: "林默", packageName: "�
 const serviceItems = [{ label: "拍摄时长", value: "3 小时", icon: "i-lucide-clock-3" }, { label: "精修数量", value: "30 张", icon: "i-lucide-images" }, { label: "交付周期", value: "3 个工作日", icon: "i-lucide-calendar-clock" }, { label: "原片交付", value: "全部原片", icon: "i-lucide-folder-down" }];
 const negotiation = reactive({ price: "1000", message: "" });
 function submitNegotiation() { const price = Number(negotiation.price); if (!price || price <= 0) return uni.showToast({ title: "请填写有效价格", icon: "none" }); if (negotiation.message.trim().length < 5) return uni.showToast({ title: "请简要说明议价原因", icon: "none" }); uni.setStorageSync(`yuepai_negotiation_${quoteId.value}`, { ...negotiation, createdAt: Date.now() }); negotiateVisible.value = false; uni.showToast({ title: "议价已发送", icon: "success" }); }
-function acceptQuote() { uni.showModal({ title: "确认接受报价", content: `确认以 ¥${quote.total} 预订「${quote.packageName}」吗？`, confirmText: "确认", success(result) { if (!result.confirm) return; const order = { id: Date.now(), no: `YP${Date.now()}`, title: quote.packageName, creator: quote.creator, amount: quote.total, status: "待付款", createdAt: new Date().toISOString() }; const orders = uni.getStorageSync("yuepai_local_orders") || []; uni.setStorageSync("yuepai_local_orders", [order, ...orders]); proxy.$tab.navigateTo(`/pages/order/confirm?orderId=${order.id}`); } }); }
+function acceptQuote() { uni.showModal({ title: "确认接受报价", content: `确认以 ¥${quote.total} 预订「${quote.packageName}」吗？`, confirmText: "确认", success(result) { if (!result.confirm) return; const order = { id: Date.now(), no: `YP${Date.now()}`, title: quote.packageName, creator: quote.creator, amount: quote.total, status: "pending_payment", createdAt: new Date().toISOString() }; const orders = uni.getStorageSync("yuepai_local_orders") || []; uni.setStorageSync("yuepai_local_orders", [order, ...orders]); proxy.$tab.navigateTo(`/pages/order/confirm?orderId=${order.id}`); } }); }
 function showRules() { uni.showModal({ title: "报价规则", content: "报价在有效期内可接受或发起一次议价。接受后将生成待支付订单，未支付前不会锁定档期。", showCancel: false }); }
 function goBack() { proxy.$tab.navigateBack(); }
 </script>
