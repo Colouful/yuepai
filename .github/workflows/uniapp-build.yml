@@ -1,0 +1,45 @@
+name: 用户端构建检查
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "ruoyi-fastapi-app/**"
+      - ".github/workflows/uniapp-build.yml"
+  push:
+    branches:
+      - feat/user-app-redesign
+    paths:
+      - "ruoyi-fastapi-app/**"
+      - ".github/workflows/uniapp-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-mp-weixin:
+    name: 构建微信小程序
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: ruoyi-fastapi-app
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 安装 pnpm
+        run: npm install --global pnpm@10.28.1
+
+      - name: 安装依赖
+        run: pnpm install --no-frozen-lockfile
+
+      - name: 构建微信小程序
+        run: pnpm build:mp-weixin
