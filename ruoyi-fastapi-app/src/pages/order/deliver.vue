@@ -1,30 +1,37 @@
 <template>
-  <view class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-violet-50">
-    <view class="bg-white/80 backdrop-blur-sm px-5 pt-12 pb-4 flex items-center">
-      <view class="i-lucide-arrow-left text-slate-700 text-xl mr-3" @click="goBack"></view>
-      <text class="text-lg font-bold text-slate-800">作品验收</text>
+  <view class="yp-page min-h-screen pb-28">
+    <view :style="{height:statusBarH+'px'}"></view>
+    <view class="px-5 pt-3 pb-3 flex items-center justify-between"><view class="size-10 rounded-full bg-white border border-black/5 flex items-center justify-center" @click="goBack"><view class="i-lucide-arrow-left text-zinc-700 text-lg"></view></view><text class="text-base font-black text-zinc-900">作品交付与验收</text><view class="w-10"></view></view>
+    <view v-if="loading" class="px-5 pt-4 space-y-4"><view class="yp-card h-36 animate-pulse bg-white/70"></view><view class="yp-card h-72 animate-pulse bg-white/70"></view></view>
+    <view v-else-if="errorMessage" class="px-8 pt-24 text-center"><text class="text-base font-black text-zinc-800 block">交付信息加载失败</text><text class="text-xs text-zinc-400 block mt-2">{{ errorMessage }}</text><view class="mt-5 inline-flex rounded-full bg-zinc-900 px-5 py-2 text-xs font-bold text-white" @click="loadDelivery">重新加载</view></view>
+    <view v-else-if="order" class="px-5 pt-4 space-y-4">
+      <view class="yp-card-strong p-5"><view class="flex items-center justify-between"><text class="text-[10px] text-white/45">DELIVERY</text><text class="text-[10px] text-amber-300">{{ statusLabel(order.status) }}</text></view><text class="text-xl font-black text-white block mt-3">{{ order.serviceSnapshot?.title||'约拍作品交付' }}</text><text class="text-xs text-white/55 block mt-2">当前订单版本 {{ order.version }}<text v-if="delivery"> · 交付版本 V{{ delivery.deliveryVersion }}</text></text></view>
+
+      <template v-if="isSeller&&canSubmit">
+        <view class="yp-card p-4"><view class="flex items-center justify-between mb-3"><text class="yp-section-title">精修作品</text><text class="text-[10px] text-zinc-400">{{ retouchedAssets.length }}/200</text></view><view class="grid grid-cols-3 gap-2"><view v-for="(url,index) in retouchedAssets" :key="url" class="relative"><image :src="url" mode="aspectFill" class="w-full h-28 rounded-2xl" @click="preview(retouchedAssets,index)"/><view class="absolute right-1 top-1 size-6 rounded-full bg-black/50 text-white flex items-center justify-center" @click="retouchedAssets.splice(index,1)"><view class="i-lucide-x text-xs"></view></view></view><view class="h-28 rounded-2xl border border-dashed border-zinc-300 flex flex-col items-center justify-center" @click="addRetouched"><view class="i-lucide-image-plus text-xl text-zinc-400"></view><text class="text-[9px] text-zinc-400 mt-1">添加精修</text></view></view></view>
+        <view class="yp-card p-4"><view class="flex items-center justify-between mb-3"><text class="yp-section-title">原片文件</text><text class="text-[10px] text-zinc-400">选填 {{ originalAssets.length }}/500</text></view><view class="grid grid-cols-3 gap-2"><view v-for="(url,index) in originalAssets" :key="url" class="relative"><image :src="url" mode="aspectFill" class="w-full h-24 rounded-2xl" @click="preview(originalAssets,index)"/><view class="absolute right-1 top-1 size-6 rounded-full bg-black/50 text-white flex items-center justify-center" @click="originalAssets.splice(index,1)"><view class="i-lucide-x text-xs"></view></view></view><view class="h-24 rounded-2xl border border-dashed border-zinc-300 flex flex-col items-center justify-center" @click="addOriginal"><view class="i-lucide-plus text-xl text-zinc-400"></view><text class="text-[9px] text-zinc-400 mt-1">添加原片</text></view></view></view>
+        <view class="yp-card p-4"><text class="yp-section-title block mb-3">交付说明</text><textarea v-model="note" maxlength="1000" placeholder="说明选片、下载期限、修改内容等" class="h-28 w-full rounded-2xl bg-zinc-50 p-4 text-sm" /></view>
+        <view class="h-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center text-sm font-black" @click="submitCurrent">提交用户验收</view>
+      </template>
+
+      <template v-else-if="delivery">
+        <view class="yp-card p-4"><view class="flex items-center justify-between mb-3"><text class="yp-section-title">精修照片</text><text class="text-[10px] text-zinc-400">{{ delivery.retouchedAssets.length }} 张</text></view><view class="grid grid-cols-3 gap-2"><image v-for="(url,index) in delivery.retouchedAssets" :key="url" :src="url" mode="aspectFill" class="w-full h-28 rounded-2xl" @click="preview(delivery.retouchedAssets,index)"/></view></view>
+        <view v-if="delivery.originalAssets.length" class="yp-card p-4"><view class="flex items-center justify-between mb-3"><text class="yp-section-title">原片</text><text class="text-[10px] text-zinc-400">{{ delivery.originalAssets.length }} 张</text></view><scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false"><view class="inline-flex space-x-2 pr-5"><image v-for="(url,index) in delivery.originalAssets" :key="url" :src="url" mode="aspectFill" class="inline-block w-28 h-24 rounded-2xl" @click="preview(delivery.originalAssets,index)"/></view></scroll-view></view>
+        <view v-if="delivery.note" class="yp-card p-4"><text class="yp-section-title block mb-3">交付说明</text><text class="text-xs text-zinc-500 leading-relaxed">{{ delivery.note }}</text></view>
+        <view v-if="delivery.revisionReason" class="rounded-2xl bg-rose-50 p-4"><text class="text-xs font-black text-rose-600 block">修改意见</text><text class="text-xs text-rose-500 leading-relaxed block mt-2">{{ delivery.revisionReason }}</text></view>
+        <view v-if="isBuyer&&order.status==='pending_acceptance'" class="yp-card p-4"><text class="yp-section-title block mb-3">验收意见</text><textarea v-model="revisionReason" maxlength="1000" placeholder="申请修改时必须具体说明需要调整的照片和内容" class="h-28 w-full rounded-2xl bg-zinc-50 p-4 text-sm" /></view>
+      </template>
+      <view v-else class="yp-card py-12 text-center"><view class="i-lucide-package-open text-3xl text-zinc-300"></view><text class="text-xs text-zinc-400 block mt-3">服务者尚未提交作品</text></view>
+
+      <view class="rounded-2xl bg-amber-50 p-4 flex items-start"><view class="i-lucide-shield-check text-amber-600 mr-3"></view><text class="text-[10px] text-amber-700 leading-relaxed">每次交付都会保留版本记录。确认验收后订单完成；申请修改不会覆盖上一版本。</text></view>
     </view>
-    <view class="px-5 pt-4 pb-24 space-y-4">
-      <view class="rounded-2xl bg-white/80 backdrop-blur-sm p-5 shadow-sm">
-        <text class="text-sm font-semibold text-slate-700 block mb-3">精修照片 (30张)</text>
-        <view class="flex flex-wrap gap-2">
-          <view v-for="i in 9" :key="i" class="h-24 w-[31%] rounded-xl bg-gradient-to-br from-rose-100 to-violet-100 relative">
-            <view class="absolute bottom-1 right-1 size-5 rounded-full bg-white/80 flex items-center justify-center">
-              <view class="i-lucide-check text-emerald-500 text-[10px]"></view>
-            </view>
-          </view>
-        </view>
-        <text class="text-[10px] text-slate-300 block mt-2 text-center">点击图片查看大图，长按选择精修</text>
-      </view>
-      <view class="flex space-x-3">
-        <view class="flex-1 h-11 rounded-xl bg-white text-slate-700 flex items-center justify-center text-sm font-semibold ring-1 ring-rose-200 active:scale-95 transition-transform">申请修改</view>
-        <view class="flex-1 h-11 rounded-xl bg-gradient-to-r from-rose-400 to-violet-400 text-white flex items-center justify-center text-sm font-semibold active:scale-95 transition-transform">确认验收</view>
-      </view>
-    </view>
+    <view v-if="isBuyer&&order?.status==='pending_acceptance'" class="fixed left-0 right-0 bottom-0 z-40 bg-white/95 border-t border-black/5 px-5 pt-3 pb-6 flex items-center space-x-3"><view class="flex-1 h-12 rounded-2xl border border-black/10 flex items-center justify-center text-sm font-black" @click="decide(false)">申请修改</view><view class="flex-1 h-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center text-sm font-black" @click="decide(true)">确认验收</view></view>
   </view>
 </template>
 <script setup>
-import { getCurrentInstance } from "vue";
-const { proxy } = getCurrentInstance();
-function goBack() { proxy.$tab.navigateBack(); }
+import { computed,getCurrentInstance,ref } from "vue";import { onLoad } from "@dcloudio/uni-app";import { useUserStore } from "@/store";import { chooseAndUploadImage } from "@/api/yuepai/upload";import { decideDelivery,getLatestDelivery,submitDelivery } from "@/api/yuepai/delivery-api";
+const {proxy}=getCurrentInstance(),userStore=useUserStore();const statusBarH=ref(44),orderId=ref(""),order=ref(null),delivery=ref(null),loading=ref(true),errorMessage=ref(""),retouchedAssets=ref([]),originalAssets=ref([]),note=ref(""),revisionReason=ref("");const isBuyer=computed(()=>Number(userStore.id)===Number(order.value?.buyerUserId)),isSeller=computed(()=>Number(userStore.id)===Number(order.value?.sellerUserId)),canSubmit=computed(()=>["pending_upload","modifying"].includes(order.value?.status));
+onLoad(o=>{orderId.value=o?.id||"";try{statusBarH.value=uni.getSystemInfoSync().statusBarHeight||44}catch(e){console.warn(e)}loadDelivery()});async function loadDelivery(){loading.value=true;errorMessage.value="";try{const r=await getLatestDelivery(orderId.value),d=r.data||r;order.value=d.order;delivery.value=d.delivery;if(isSeller.value&&delivery.value?.status==="revision_requested"){retouchedAssets.value=[...(delivery.value.retouchedAssets||[])];originalAssets.value=[...(delivery.value.originalAssets||[])];note.value=delivery.value.note||""}}catch(e){errorMessage.value=e?.message||"网络异常"}finally{loading.value=false}}
+async function addRetouched(){const url=await chooseAndUploadImage();if(url&&retouchedAssets.value.length<200)retouchedAssets.value.push(url)}async function addOriginal(){const url=await chooseAndUploadImage();if(url&&originalAssets.value.length<500)originalAssets.value.push(url)}async function submitCurrent(){if(!retouchedAssets.value.length)return uni.showToast({title:"至少上传一张精修作品",icon:"none"});await submitDelivery(orderId.value,{requestId:reqId(),expectedOrderVersion:order.value.version,originalAssets:originalAssets.value,retouchedAssets:retouchedAssets.value,note:note.value.trim()||null});uni.showToast({title:"已提交验收",icon:"success"});loadDelivery()}
+function decide(accepted){if(!accepted&&!revisionReason.value.trim())return uni.showToast({title:"请填写修改意见",icon:"none"});uni.showModal({title:accepted?"确认验收":"申请修改",content:accepted?"确认作品符合约定并完成订单吗？":"确认提交修改意见吗？",success:async r=>{if(!r.confirm)return;await decideDelivery(orderId.value,{requestId:reqId(),expectedOrderVersion:order.value.version,accepted,reason:accepted?null:revisionReason.value.trim()});uni.showToast({title:accepted?"验收完成":"修改意见已提交",icon:"success"});loadDelivery()}})}function preview(urls,index){uni.previewImage({current:index,urls})}function reqId(){return`${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}function statusLabel(v){return{pending_upload:"待上传",modifying:"修改中",pending_acceptance:"待验收",completed:"已完成"}[v]||v}function goBack(){proxy.$tab.navigateBack()}
 </script>
