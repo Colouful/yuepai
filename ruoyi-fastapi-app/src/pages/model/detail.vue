@@ -1,53 +1,37 @@
 <template>
-  <view class="min-h-screen bg-gradient-to-br from-sky-50 via-cyan-50 to-emerald-50">
-    <view class="relative h-56 bg-gradient-to-br from-sky-400 to-emerald-400">
-      <view class="absolute inset-0 bg-black/10"></view>
-      <view class="absolute top-12 left-5 z-10" @click="goBack">
-        <view class="i-lucide-arrow-left text-white text-xl"></view>
+  <view class="yp-page min-h-screen pb-28">
+    <view v-if="loading" class="pt-24 px-5 space-y-4"><view class="h-72 rounded-[32rpx] bg-white/70 animate-pulse"></view><view class="h-44 rounded-[24rpx] bg-white/70 animate-pulse"></view></view>
+    <view v-else-if="errorMessage" class="pt-36 px-8 text-center"><text class="text-base font-black text-zinc-800 block">模特详情加载失败</text><text class="text-xs text-zinc-400 block mt-2">{{ errorMessage }}</text><view class="mt-5 inline-flex rounded-full bg-zinc-900 px-5 py-2 text-xs font-bold text-white" @click="loadAll">重新加载</view></view>
+
+    <template v-else-if="creator">
+      <view class="relative h-[580rpx] overflow-hidden bg-zinc-900">
+        <image v-if="creator.coverUrl" :src="creator.coverUrl" mode="aspectFill" class="absolute inset-0 w-full h-full"/>
+        <view v-else class="absolute inset-0" style="background:linear-gradient(145deg,#0f172a,#164e63 55%,#064e3b)"></view>
+        <view class="absolute inset-0" style="background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.8))"></view>
+        <view :style="{height:statusBarH+'px'}"></view>
+        <view class="relative z-10 px-5 pt-3 flex items-center justify-between"><view class="size-10 rounded-full bg-black/30 flex items-center justify-center" @click="goBack"><view class="i-lucide-arrow-left text-white text-lg"></view></view><view class="size-10 rounded-full bg-black/30 flex items-center justify-center" @click="toggleFollow"><view class="text-lg" :class="followed?'i-lucide-heart fill-rose-500 text-rose-500':'i-lucide-heart text-white'"></view></view></view>
+        <view class="absolute left-5 right-5 bottom-6 z-10 flex items-end"><image v-if="creator.avatarUrl" :src="creator.avatarUrl" mode="aspectFill" class="size-24 rounded-[32rpx] border-4 border-white/80"/><view v-else class="size-24 rounded-[32rpx] border-4 border-white/80 bg-white flex items-center justify-center text-3xl font-black text-zinc-900">{{ creator.displayName?.slice(0,1)||'模' }}</view><view class="flex-1 min-w-0 ml-4 pb-1"><view class="flex items-center"><text class="text-2xl font-black text-white truncate">{{ creator.displayName }}</text><view v-if="creator.certificationStatus==='approved'" class="i-lucide-badge-check text-amber-300 text-xl ml-2"></view></view><text class="text-xs text-white/70 block mt-1">{{ creator.headline||'约拍模特' }}</text><view class="flex items-center space-x-3 mt-3"><text class="text-[10px] text-white/60">{{ creator.cityCode }}</text><text class="text-[10px] text-white/60">{{ creator.completedOrders }} 次合作</text><text v-if="creator.acceptMutual" class="text-[10px] text-emerald-300">接受互勉</text></view></view></view>
       </view>
-      <view class="absolute bottom-0 left-0 right-0 px-5 pb-4 z-10 flex items-end space-x-4">
-        <view class="size-20 rounded-3xl bg-white shadow-xl flex items-center justify-center text-3xl font-bold text-sky-400 border-4 border-white/50">雨</view>
-        <view class="flex-1 pb-1">
-          <view class="flex items-center space-x-2">
-            <text class="text-xl font-bold text-white">小雨</text>
-            <view class="i-lucide-badge-check text-amber-300 text-lg"></view>
-          </view>
-          <text class="text-sm text-white/80 block">168cm · 人像写真 · 北京</text>
-          <text class="text-xs text-white/70 mt-0.5 block">56次合作 · 4.9分 · 接受互勉</text>
-        </view>
+
+      <view class="px-5 -mt-1 relative z-20"><view class="yp-card grid grid-cols-4 py-4"><view class="text-center border-r border-black/5"><text class="text-base font-black block">{{ Number(creator.rating||0).toFixed(1) }}</text><text class="text-[9px] text-zinc-400">评分</text></view><view class="text-center border-r border-black/5"><text class="text-base font-black block">{{ creator.completedOrders }}</text><text class="text-[9px] text-zinc-400">合作</text></view><view class="text-center border-r border-black/5"><text class="text-base font-black block">{{ creator.responseRate }}%</text><text class="text-[9px] text-zinc-400">回复率</text></view><view class="text-center"><text class="text-base font-black block">{{ creator.followerCount }}</text><text class="text-[9px] text-zinc-400">关注</text></view></view></view>
+
+      <view class="px-5 pt-5 space-y-5">
+        <view class="flex flex-wrap gap-2"><view v-for="tag in creator.tags" :key="tag" class="yp-chip">{{ tag }}</view></view>
+        <view class="yp-card p-4"><text class="yp-section-title block mb-3">个人介绍</text><text class="text-xs text-zinc-500 leading-relaxed whitespace-pre-wrap">{{ creator.bio||'暂未填写详细介绍。' }}</text><view class="mt-4 flex flex-wrap gap-2"><view v-for="city in serviceCities" :key="city" class="rounded-full bg-zinc-100 px-3 py-1.5 text-[10px] text-zinc-500">可约 {{ city }}</view></view></view>
+
+        <view><view class="flex items-end justify-between mb-3"><view><text class="yp-section-title block">模卡作品</text><text class="text-[10px] text-zinc-400 block mt-1">{{ worksTotal }} 组公开作品</text></view></view><view v-if="works.length" class="grid grid-cols-3 gap-2"><image v-for="work in works" :key="work.workId" :src="work.coverUrl" mode="aspectFill" class="w-full h-36 rounded-2xl" @click="openWork(work)"/></view><view v-else class="yp-card py-10 text-center"><text class="text-xs text-zinc-400">暂无公开模卡</text></view></view>
+
+        <view><view class="flex items-end justify-between mb-3"><view><text class="yp-section-title block">合作套餐</text><text class="text-[10px] text-zinc-400 block mt-1">收费、时长和交付规则以套餐为准</text></view></view><view v-if="packages.length" class="space-y-3"><view v-for="item in packages" :key="item.packageId" class="yp-card p-4" @click="openPackage(item)"><view class="flex items-start justify-between"><view class="flex-1"><text class="text-sm font-black text-zinc-900 block">{{ item.packageName }}</text><text class="text-xs text-zinc-500 block mt-2 line-clamp-2">{{ item.description }}</text></view><text class="text-lg font-black text-rose-500 ml-3">¥{{ money(item.price) }}</text></view><view class="mt-3 flex items-center justify-between"><text class="text-[10px] text-zinc-400">{{ duration(item.durationMinutes) }} · {{ item.deliveryDays }}天交付</text><view class="i-lucide-chevron-right text-zinc-300"></view></view></view></view><view v-else class="yp-card py-10 text-center"><text class="text-xs text-zinc-400">暂无公开合作套餐</text></view></view>
+
+        <view><view class="flex items-end justify-between mb-3"><view><text class="yp-section-title block">真实评价</text><text class="text-[10px] text-zinc-400 block mt-1">仅完成订单用户可评价</text></view><text class="text-xs text-zinc-400">{{ reviewsTotal }} 条</text></view><view v-if="reviews.length" class="space-y-3"><view v-for="review in reviews" :key="review.reviewId" class="yp-card p-4"><view class="flex items-center"><view class="size-9 rounded-full bg-zinc-900 text-white text-[10px] flex items-center justify-center">{{ review.reviewer?.nickName?.slice(0,1)||'用' }}</view><view class="flex-1 ml-3"><text class="text-xs font-bold text-zinc-700 block">{{ review.reviewer?.nickName||'用户' }}</text><text class="text-[9px] text-zinc-400 block mt-1">{{ formatDate(review.createTime) }}</text></view><text class="text-xs font-black text-amber-500">★ {{ review.rating }}</text></view><text class="text-xs text-zinc-500 leading-relaxed block mt-3">{{ review.content }}</text></view></view><view v-else class="yp-card py-10 text-center"><text class="text-xs text-zinc-400">暂无真实评价</text></view></view>
       </view>
-    </view>
-    <view class="px-5 py-4 flex space-x-3 bg-white/80 backdrop-blur-sm">
-      <view class="flex-1 h-10 rounded-xl bg-gradient-to-r from-sky-400 to-emerald-400 text-white flex items-center justify-center text-sm font-semibold active:scale-95 transition-transform">邀请约拍</view>
-      <view class="h-10 w-10 rounded-xl bg-violet-50 flex items-center justify-center text-violet-400 active:scale-95 transition-transform">
-        <view class="i-lucide-message-circle text-lg"></view>
-      </view>
-      <view class="h-10 w-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-400 active:scale-95 transition-transform">
-        <view class="i-lucide-heart text-lg"></view>
-      </view>
-    </view>
-    <view class="px-5 pb-24 space-y-4">
-      <view class="rounded-2xl bg-white/80 backdrop-blur-sm p-4 shadow-sm">
-        <text class="text-sm font-semibold text-slate-700 block mb-2">基本资料</text>
-        <view class="grid grid-cols-3 gap-3">
-          <view v-for="info in [{l:'身高',v:'168cm'},{l:'体重',v:'50kg'},{l:'鞋码',v:'37'},{l:'风格',v:'清新日系'},{l:'城市',v:'北京'},{l:'可约',v:'周末'}]" :key="info.l"
-            class="text-center rounded-xl bg-sky-50/50 py-2">
-            <text class="text-[10px] text-slate-400 block">{{ info.l }}</text>
-            <text class="text-xs font-semibold text-slate-700 block mt-0.5">{{ info.v }}</text>
-          </view>
-        </view>
-      </view>
-      <view>
-        <text class="text-sm font-bold text-slate-700 block mb-3">模卡作品</text>
-        <view class="flex flex-wrap gap-2">
-          <view v-for="i in 6" :key="i" class="h-28 w-[31%] rounded-xl bg-gradient-to-br from-sky-100 to-emerald-100"></view>
-        </view>
-      </view>
-    </view>
+
+      <view class="fixed left-0 right-0 bottom-0 z-40 bg-white/95 border-t border-black/5 px-5 pt-3 pb-6 flex items-center space-x-3"><view class="size-12 rounded-2xl border border-black/10 flex items-center justify-center" @click="openChat"><view class="i-lucide-message-circle text-zinc-700 text-lg"></view></view><view class="flex-1 h-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center text-sm font-black" @click="invite">{{ packages.length?'选择套餐邀请':'邀请约拍' }}</view></view>
+    </template>
   </view>
 </template>
 <script setup>
-import { getCurrentInstance } from "vue";
-const { proxy } = getCurrentInstance();
-function goBack() { proxy.$tab.navigateBack(); }
+import { computed,getCurrentInstance,ref } from "vue";import { onLoad } from "@dcloudio/uni-app";import { getToken } from "@/utils/auth";import { getCreator,listCreatorPackages,listCreatorReviews,listWorks } from "@/api/yuepai/creator-api";import { followCreator,getCreatorState,unfollowCreator } from "@/api/yuepai/creator-social";
+const {proxy}=getCurrentInstance();const statusBarH=ref(44),creatorId=ref(""),creator=ref(null),works=ref([]),worksTotal=ref(0),packages=ref([]),reviews=ref([]),reviewsTotal=ref(0),followed=ref(false),loading=ref(true),errorMessage=ref(""),operating=ref(false);const serviceCities=computed(()=>creator.value?.serviceCities?.length?creator.value.serviceCities:[creator.value?.cityCode].filter(Boolean));
+onLoad(o=>{creatorId.value=o?.id||"";try{statusBarH.value=uni.getSystemInfoSync().statusBarHeight||44}catch(e){console.warn(e)}loadAll()});async function loadAll(){loading.value=true;errorMessage.value="";try{const [a,b,c,d]=await Promise.all([getCreator(creatorId.value),listWorks({creatorId:creatorId.value,pageNum:1,pageSize:6}),listCreatorPackages(creatorId.value),listCreatorReviews(creatorId.value,{pageNum:1,pageSize:5})]);creator.value=a.data||a;works.value=b.rows||[];worksTotal.value=Number(b.total||works.value.length);packages.value=c.rows||[];reviews.value=d.rows||[];reviewsTotal.value=Number(d.total||reviews.value.length);if(getToken()){try{const s=await getCreatorState(creatorId.value);followed.value=Boolean((s.data||s).followed)}catch(e){console.warn(e)}}}catch(e){errorMessage.value=e?.message||"网络异常"}finally{loading.value=false}}async function toggleFollow(){if(!getToken())return proxy.$tab.navigateTo("/pages/login");if(operating.value)return;operating.value=true;try{const r=followed.value?await unfollowCreator(creatorId.value):await followCreator(creatorId.value);const d=r.data||r;followed.value=Boolean(d.followed);creator.value.followerCount=Number(d.followerCount||0)}finally{operating.value=false}}function openWork(w){proxy.$tab.navigateTo(`/pages/works/detail?id=${w.workId}`)}function openPackage(p){proxy.$tab.navigateTo(`/pages/package/detail?id=${p.packageId}&creatorId=${creatorId.value}`)}function invite(){packages.value.length?openPackage(packages.value[0]):openChat()}function openChat(){if(!getToken())return proxy.$tab.navigateTo("/pages/login");proxy.$tab.navigateTo(`/pages/chat/index?userId=${creator.value.userId}&creatorId=${creatorId.value}&name=${encodeURIComponent(creator.value.displayName)}`)}function money(v){return Number(v||0).toFixed(0)}function duration(v){return Number(v)>=60?`${Math.round(Number(v)/60)}小时`:`${v}分钟`}function formatDate(v){const d=new Date(v);return Number.isNaN(d.getTime())?"":`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}function goBack(){proxy.$tab.navigateBack()}
 </script>
