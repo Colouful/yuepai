@@ -1,107 +1,94 @@
 <template>
-  <view class="min-h-screen" style="background: linear-gradient(180deg, #FDF2F8 0%, #FFFFFF 40%, #F5F3FF 100%)">
+  <view class="yp-page">
     <view :style="{ height: statusBarH + 'px' }"></view>
 
-    <!-- Header -->
-    <view class="px-5 pt-3 pb-2">
+    <view class="px-5 pt-3 pb-3">
       <view class="flex items-center justify-between">
-        <view>
-          <text class="text-[22px] font-black tracking-tight" style="background:linear-gradient(135deg,#EC4899,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent">约拍</text>
-          <text class="text-[10px] text-slate-400 block ml-0.5">记录美好瞬间</text>
-        </view>
-        <view class="flex items-center space-x-2.5">
-          <view class="relative size-10 rounded-2xl bg-white flex items-center justify-center" style="box-shadow:0 2px 12px rgba(244,114,182,0.1)">
-            <view class="i-lucide-bell text-slate-500 text-lg"></view>
-            <view class="absolute -top-0.5 -right-0.5 size-2.5 rounded-full bg-rose-400 border-2 border-white"></view>
+        <view class="flex items-center" @click="open('/pages/city/index')">
+          <view>
+            <text class="yp-eyebrow block">YUEPAI</text>
+            <view class="flex items-center mt-1">
+              <text class="text-xl font-black text-zinc-900">北京</text>
+              <view class="i-lucide-chevron-down text-zinc-400 text-sm ml-1"></view>
+            </view>
           </view>
-          <view class="size-10 rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,#F472B6,#A78BFA);box-shadow:0 4px 15px rgba(244,114,182,0.25)" @click="$tab.navigateTo('/pages/search/index')">
+        </view>
+        <view class="flex items-center space-x-2">
+          <view class="relative size-10 rounded-full bg-white border border-black/5 flex items-center justify-center" @click="open('/pages/message/index')">
+            <view class="i-lucide-bell text-zinc-700 text-lg"></view>
+            <view class="absolute right-1 top-1 size-2 rounded-full bg-rose-500 border border-white"></view>
+          </view>
+          <view class="size-10 rounded-full bg-zinc-900 flex items-center justify-center" @click="open('/pages/search/index')">
             <view class="i-lucide-search text-white text-lg"></view>
           </view>
         </view>
       </view>
 
-      <!-- 定位 + 搜索 -->
-      <view class="mt-3 flex items-center space-x-1.5 mb-3">
-        <view class="i-lucide-map-pin text-rose-400 text-xs"></view>
-        <text class="text-xs text-slate-500 font-semibold">北京</text>
-        <view class="i-lucide-chevron-down text-slate-400 text-[10px]"></view>
-      </view>
-      <view class="h-11 rounded-2xl bg-white flex items-center px-4" style="box-shadow:0 2px 12px rgba(244,114,182,0.08)" @click="$tab.navigateTo('/pages/search/index')">
-        <view class="i-lucide-search text-rose-300 text-sm mr-2"></view>
-        <text class="text-sm text-slate-300">搜索摄影师、模特、作品...</text>
+      <view class="mt-4 h-11 rounded-2xl bg-white border border-black/5 px-4 flex items-center" @click="open('/pages/search/index')">
+        <view class="i-lucide-search text-zinc-400 text-sm mr-2"></view>
+        <text class="text-sm text-zinc-400">搜索摄影师、模特、作品和约拍</text>
       </view>
     </view>
 
     <scroll-view scroll-y :show-scrollbar="false" :style="{ height: scrollH + 'px' }">
-      <view class="px-5 pb-24 space-y-5">
-
-        <!-- Banner -->
-        <swiper class="h-44 rounded-3xl overflow-hidden" autoplay interval="4000" circular indicator-dots indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#FFFFFF">
-          <swiper-item>
-            <view class="h-full w-full flex items-center px-6" style="background:linear-gradient(135deg,#EC4899 0%,#A78BFA 50%,#8B5CF6 100%)">
-              <view class="flex-1">
-                <text class="text-white text-xl font-black block">新人专享</text>
-                <text class="text-white/80 text-xs block mt-1">首单立减50元</text>
-                <view class="mt-3 rounded-full bg-white/25 px-5 py-2 text-xs font-bold text-white inline-block backdrop-blur-sm">立即领取</view>
+      <view class="px-5 pb-28 space-y-6">
+        <view class="relative h-52 rounded-[28px] overflow-hidden bg-zinc-900" @click="open('/pages/demand/index')">
+          <view class="absolute -right-8 -top-12 size-48 rounded-full" style="background:rgba(244,63,94,.4);filter:blur(28px)"></view>
+          <view class="absolute right-8 bottom-4 size-28 rounded-full border border-white/10"></view>
+          <view class="absolute right-14 bottom-10 size-16 rounded-full border border-white/10"></view>
+          <view class="absolute inset-0 p-6 flex flex-col justify-between">
+            <view class="flex items-center justify-between">
+              <view class="rounded-full bg-white/10 border border-white/10 px-3 py-1.5 text-[10px] font-bold text-white">同城灵感计划</view>
+              <text class="text-[10px] text-white/45">VOL. 06</text>
+            </view>
+            <view>
+              <text class="text-[11px] tracking-[4px] text-rose-300 block">CREATE TOGETHER</text>
+              <text class="text-[25px] leading-tight font-black text-white block mt-2">这个周末，去拍一组<br />真正属于你的照片</text>
+              <view class="mt-4 flex items-center">
+                <view class="rounded-full bg-white px-4 py-2 text-[11px] font-black text-zinc-900">寻找搭档</view>
+                <text class="text-[10px] text-white/55 ml-3">已有 286 人加入</text>
               </view>
-              <view class="i-lucide-camera text-white/20 text-[80px]"></view>
             </view>
-          </swiper-item>
-          <swiper-item>
-            <view class="h-full w-full flex items-center px-6" style="background:linear-gradient(135deg,#38BDF8 0%,#34D399 100%)">
-              <view class="flex-1">
-                <text class="text-white text-xl font-black block">互勉创作</text>
-                <text class="text-white/80 text-xs block mt-1">免费约拍机会</text>
-                <view class="mt-3 rounded-full bg-white/25 px-5 py-2 text-xs font-bold text-white inline-block backdrop-blur-sm">去看看</view>
-              </view>
-              <view class="i-lucide-heart text-white/20 text-[80px]"></view>
-            </view>
-          </swiper-item>
-        </swiper>
-
-        <!-- 快捷入口 -->
-        <view class="flex justify-between px-1">
-          <view v-for="e in entries" :key="e.label" class="flex flex-col items-center" @click="e.fn()">
-            <view class="size-14 rounded-2xl flex items-center justify-center mb-2 active:scale-90 transition-transform duration-200" :style="{background:e.bg, boxShadow:e.shadow}">
-              <view :class="e.icon" class="text-2xl text-white"></view>
-            </view>
-            <text class="text-[11px] font-semibold text-slate-600">{{ e.label }}</text>
           </view>
         </view>
 
-        <!-- 频道标签 -->
-        <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false">
-          <view class="inline-flex space-x-2">
-            <view v-for="(ch, i) in channels" :key="ch" class="inline-block rounded-full px-4 py-2 text-xs font-bold transition-all duration-300"
-              :style="chIdx===i ? 'background:linear-gradient(135deg,#F472B6,#A78BFA);color:#fff;box-shadow:0 4px 15px rgba(244,114,182,0.3)' : 'background:rgba(255,255,255,0.9);color:#64748B;box-shadow:0 2px 8px rgba(244,114,182,0.06)'"
-              @click="chIdx=i">{{ ch }}</view>
-          </view>
-        </scroll-view>
-
-        <!-- 附近摄影师 -->
-        <view>
-          <view class="flex items-center justify-between mb-3">
-            <view class="flex items-center space-x-2">
-              <view class="h-5 w-1 rounded-full" style="background:linear-gradient(180deg,#F472B6,#A78BFA)"></view>
-              <text class="text-[15px] font-black text-slate-800">附近摄影师</text>
+        <view class="grid grid-cols-4 gap-3">
+          <view v-for="item in entries" :key="item.label" class="flex flex-col items-center" @click="open(item.path)">
+            <view class="size-13 rounded-2xl bg-white border border-black/5 flex items-center justify-center">
+              <view :class="item.icon" class="text-xl" :style="{ color: item.color }"></view>
             </view>
-            <text class="text-xs font-semibold text-rose-400" @click="$tab.navigateTo('/pages/photographer/index')">全部</text>
+            <text class="text-[10px] font-semibold text-zinc-600 mt-2">{{ item.label }}</text>
           </view>
+        </view>
+
+        <view>
+          <view class="flex items-end justify-between mb-3">
+            <view>
+              <text class="yp-section-title block">同城创作者</text>
+              <text class="text-[10px] text-zinc-400 block mt-1">距离近，也懂你的审美</text>
+            </view>
+            <text class="text-xs font-bold text-rose-500" @click="open('/pages/photographer/index')">查看全部</text>
+          </view>
+
           <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false">
-            <view class="inline-flex space-x-3">
-              <view v-for="p in photographers" :key="p.name" class="inline-block w-36 rounded-2xl bg-white p-3 active:scale-95 transition-transform duration-200" style="box-shadow:0 2px 12px rgba(244,114,182,0.08)" @click="$tab.navigateTo('/pages/photographer/detail')">
-                <view class="flex items-center space-x-2.5 mb-2">
-                  <view class="size-11 rounded-xl flex items-center justify-center text-white font-bold text-sm" :style="{background:p.bg}">{{ p.name[0] }}</view>
-                  <view class="flex-1 min-w-0">
-                    <text class="text-sm font-bold text-slate-800 block truncate">{{ p.name }}</text>
-                    <text class="text-[10px] text-slate-400 block">{{ p.style }}</text>
-                  </view>
+            <view class="inline-flex space-x-3 pr-5">
+              <view v-for="item in creators" :key="item.id" class="inline-block w-40 yp-card overflow-hidden" @click="open('/pages/photographer/detail')">
+                <view class="relative h-28" :style="{ background: item.cover }">
+                  <view class="absolute right-2 top-2 rounded-full bg-black/35 px-2 py-1 text-[9px] text-white">{{ item.distance }}</view>
+                  <view class="absolute left-3 bottom-3 size-10 rounded-2xl bg-white/20 border border-white/25 flex items-center justify-center text-white font-black">{{ item.name[0] }}</view>
                 </view>
-                <view class="flex items-center justify-between">
-                  <text class="text-[10px] text-slate-400">{{ p.city }}</text>
-                  <view class="flex items-center space-x-0.5">
-                    <view class="i-lucide-star text-amber-400 text-[10px]"></view>
-                    <text class="text-[10px] font-bold text-slate-600">{{ p.rating }}</text>
+                <view class="p-3">
+                  <view class="flex items-center">
+                    <text class="text-sm font-black text-zinc-900 truncate">{{ item.name }}</text>
+                    <view class="i-lucide-badge-check text-rose-500 text-xs ml-1"></view>
+                  </view>
+                  <text class="text-[10px] text-zinc-400 block mt-1">{{ item.style }}</text>
+                  <view class="mt-2 flex items-center justify-between">
+                    <text class="text-[11px] font-black text-zinc-900">{{ item.price }}</text>
+                    <view class="flex items-center">
+                      <view class="i-lucide-star text-amber-400 text-[10px]"></view>
+                      <text class="text-[10px] text-zinc-500 ml-0.5">{{ item.rating }}</text>
+                    </view>
                   </view>
                 </view>
               </view>
@@ -109,102 +96,107 @@
           </scroll-view>
         </view>
 
-        <!-- 热门需求 -->
         <view>
-          <view class="flex items-center justify-between mb-3">
-            <view class="flex items-center space-x-2">
-              <view class="h-5 w-1 rounded-full" style="background:linear-gradient(180deg,#38BDF8,#34D399)"></view>
-              <text class="text-[15px] font-black text-slate-800">热门需求</text>
+          <view class="flex items-end justify-between mb-3">
+            <view>
+              <text class="yp-section-title block">正在招募</text>
+              <text class="text-[10px] text-zinc-400 block mt-1">找到合适的人，一起完成创作</text>
             </view>
-            <text class="text-xs font-semibold text-rose-400" @click="$tab.navigateTo('/pages/demand/index')">更多</text>
+            <text class="text-xs font-bold text-rose-500" @click="open('/pages/demand/index')">更多需求</text>
           </view>
+
           <view class="space-y-3">
-            <view v-for="d in demands" :key="d.title" class="rounded-2xl bg-white p-4 active:scale-[0.98] transition-transform duration-200" style="box-shadow:0 2px 12px rgba(244,114,182,0.06)">
-              <view class="flex items-start justify-between mb-2">
-                <view class="flex-1">
-                  <view class="flex items-center space-x-2 mb-1">
-                    <view class="rounded-lg px-2 py-0.5 text-[10px] font-black" :style="d.mutual ? 'background:#ECFDF5;color:#059669' : 'background:#FDF2F8;color:#EC4899'">{{ d.tag }}</view>
-                    <text class="text-sm font-bold text-slate-800">{{ d.title }}</text>
+            <view v-for="item in demands" :key="item.id" class="yp-card p-4" @click="open('/pages/demand/detail')">
+              <view class="flex items-start">
+                <view class="size-11 rounded-2xl flex items-center justify-center" :style="{ background: item.iconBackground }">
+                  <view :class="item.icon" class="text-lg" :style="{ color: item.iconColor }"></view>
+                </view>
+                <view class="flex-1 ml-3 min-w-0">
+                  <view class="flex items-center justify-between">
+                    <text class="text-sm font-black text-zinc-900 truncate">{{ item.title }}</text>
+                    <text class="text-sm font-black" :class="item.mutual ? 'text-emerald-600' : 'text-rose-500'">{{ item.price }}</text>
                   </view>
-                  <text class="text-[11px] text-slate-400">{{ d.info }}</text>
+                  <text class="text-[10px] text-zinc-400 block mt-1.5">{{ item.meta }}</text>
+                  <view class="mt-3 flex items-center justify-between">
+                    <view class="flex items-center space-x-1.5">
+                      <view v-for="role in item.roles" :key="role" class="rounded-full bg-zinc-100 px-2 py-1 text-[9px] text-zinc-500">{{ role }}</view>
+                    </view>
+                    <text class="text-[10px] text-zinc-300">{{ item.applicants }} 人报名</text>
+                  </view>
                 </view>
-                <text class="text-base font-black text-rose-500">{{ d.price }}</text>
-              </view>
-              <view class="flex items-center justify-between">
-                <view class="flex items-center space-x-1.5">
-                  <view class="size-6 rounded-full flex items-center justify-center text-white text-[8px] font-bold" :style="{background:d.avatarBg}">{{ d.user[0] }}</view>
-                  <text class="text-[10px] text-slate-400">{{ d.user }}</text>
-                </view>
-                <text class="text-[10px] text-slate-300">{{ d.apply }}人报名</text>
               </view>
             </view>
           </view>
         </view>
 
-        <!-- 精选作品 -->
         <view>
-          <view class="flex items-center justify-between mb-3">
-            <view class="flex items-center space-x-2">
-              <view class="h-5 w-1 rounded-full" style="background:linear-gradient(180deg,#FBBF24,#FB923C)"></view>
-              <text class="text-[15px] font-black text-slate-800">精选作品</text>
+          <view class="flex items-end justify-between mb-3">
+            <view>
+              <text class="yp-section-title block">灵感专题</text>
+              <text class="text-[10px] text-zinc-400 block mt-1">从风格开始，找到你的表达</text>
             </view>
-            <text class="text-xs font-semibold text-rose-400" @click="$tab.navigateTo('/pages/works/index')">更多</text>
+            <text class="text-xs font-bold text-rose-500" @click="open('/pages/works/index')">发现更多</text>
           </view>
-          <view class="flex flex-wrap gap-2.5">
-            <view v-for="w in works" :key="w.title" class="w-[48%] rounded-2xl bg-white overflow-hidden active:scale-95 transition-transform duration-200" style="box-shadow:0 2px 12px rgba(244,114,182,0.06)">
-              <view class="h-36" :style="{background:w.bg}"></view>
-              <view class="p-3">
-                <text class="text-xs font-bold text-slate-800 block truncate">{{ w.title }}</text>
-                <view class="mt-1.5 flex items-center justify-between">
-                  <view class="flex items-center space-x-1">
-                    <view class="size-4 rounded-full flex items-center justify-center text-white text-[6px] font-bold" :style="{background:w.avatarBg}">{{ w.author[0] }}</view>
-                    <text class="text-[10px] text-slate-400">{{ w.author }}</text>
-                  </view>
-                  <view class="flex items-center space-x-0.5">
-                    <view class="i-lucide-heart text-rose-300 text-[10px]"></view>
-                    <text class="text-[10px] text-slate-400">{{ w.likes }}</text>
-                  </view>
+
+          <scroll-view scroll-x class="whitespace-nowrap" :show-scrollbar="false">
+            <view class="inline-flex space-x-3 pr-5">
+              <view v-for="item in topics" :key="item.title" class="relative inline-block w-64 h-36 rounded-3xl overflow-hidden" :style="{ background: item.cover }" @click="open('/pages/works/index')">
+                <view class="absolute inset-0" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,.68))"></view>
+                <view class="absolute left-4 right-4 bottom-4">
+                  <text class="text-base font-black text-white block">{{ item.title }}</text>
+                  <text class="text-[10px] text-white/60 block mt-1">{{ item.subtitle }}</text>
                 </view>
               </view>
             </view>
-          </view>
+          </scroll-view>
         </view>
-
       </view>
     </scroll-view>
   </view>
 </template>
+
 <script setup>
-import { ref, getCurrentInstance } from "vue";
+import { getCurrentInstance, ref } from "vue";
+
 const { proxy } = getCurrentInstance();
 const statusBarH = ref(44);
 const scrollH = ref(600);
-const chIdx = ref(0);
-try { const s = uni.getSystemInfoSync(); statusBarH.value = s.statusBarHeight||44; scrollH.value = s.windowHeight - statusBarH.value - 60; } catch(e){}
 
-const channels = ["推荐","附近","摄影师","模特","互勉","旅拍","婚纱","古风"];
+try {
+  const systemInfo = uni.getSystemInfoSync();
+  statusBarH.value = systemInfo.statusBarHeight || 44;
+  scrollH.value = systemInfo.windowHeight - statusBarH.value - 112;
+} catch (error) {
+  console.warn("获取设备信息失败", error);
+}
+
 const entries = [
-  { label:"找摄影师", icon:"i-lucide-camera", bg:"linear-gradient(135deg,#F472B6,#EC4899)", shadow:"0 4px 15px rgba(244,114,182,0.3)", fn:()=>proxy.$tab.navigateTo('/pages/photographer/index') },
-  { label:"找模特", icon:"i-lucide-user", bg:"linear-gradient(135deg,#A78BFA,#8B5CF6)", shadow:"0 4px 15px rgba(167,139,250,0.3)", fn:()=>proxy.$tab.navigateTo('/pages/model/index') },
-  { label:"需求大厅", icon:"i-lucide-megaphone", bg:"linear-gradient(135deg,#38BDF8,#0EA5E9)", shadow:"0 4px 15px rgba(56,189,248,0.3)", fn:()=>proxy.$tab.navigateTo('/pages/demand/index') },
-  { label:"拍场地", icon:"i-lucide-map-pin", bg:"linear-gradient(135deg,#34D399,#10B981)", shadow:"0 4px 15px rgba(52,211,153,0.3)", fn:()=>proxy.$tab.navigateTo('/pages/venue/index') },
+  { label: "找摄影师", icon: "i-lucide-camera", color: "#f43f5e", path: "/pages/photographer/index" },
+  { label: "找模特", icon: "i-lucide-user-round", color: "#7c3aed", path: "/pages/model/index" },
+  { label: "需求大厅", icon: "i-lucide-megaphone", color: "#0284c7", path: "/pages/demand/index" },
+  { label: "拍摄场地", icon: "i-lucide-map-pinned", color: "#059669", path: "/pages/venue/index" },
 ];
-const photographers = [
-  { name:"林默", style:"人像写真", city:"北京", rating:"4.9", bg:"linear-gradient(135deg,#F472B6,#EC4899)" },
-  { name:"苏晴", style:"婚纱摄影", city:"上海", rating:"4.8", bg:"linear-gradient(135deg,#A78BFA,#8B5CF6)" },
-  { name:"陈风", style:"商业摄影", city:"广州", rating:"4.7", bg:"linear-gradient(135deg,#38BDF8,#0EA5E9)" },
-  { name:"叶知秋", style:"写真摄影", city:"成都", rating:"4.9", bg:"linear-gradient(135deg,#34D399,#10B981)" },
-  { name:"白鹭", style:"古风摄影", city:"杭州", rating:"4.8", bg:"linear-gradient(135deg,#FBBF24,#F59E0B)" },
+
+const creators = [
+  { id: 1, name: "林默", style: "情绪人像 · 胶片", distance: "1.2km", price: "¥599 起", rating: "4.9", cover: "linear-gradient(145deg,#fecdd3,#fb7185 52%,#881337)" },
+  { id: 2, name: "苏晴", style: "婚纱纪实 · 旅拍", distance: "2.8km", price: "¥899 起", rating: "4.8", cover: "linear-gradient(145deg,#ddd6fe,#8b5cf6 52%,#3b0764)" },
+  { id: 3, name: "陈风", style: "商业摄影 · 街拍", distance: "3.6km", price: "¥699 起", rating: "4.7", cover: "linear-gradient(145deg,#bae6fd,#0ea5e9 52%,#082f49)" },
+  { id: 4, name: "白鹭", style: "汉服古风 · 棚拍", distance: "4.1km", price: "¥799 起", rating: "4.9", cover: "linear-gradient(145deg,#d1fae5,#10b981 52%,#022c22)" },
 ];
+
 const demands = [
-  { title:"周末人像写真", tag:"¥500", info:"人像 · 北京朝阳 · 6月20日", price:"¥500", user:"小雨", apply:12, mutual:false, avatarBg:"linear-gradient(135deg,#F472B6,#EC4899)" },
-  { title:"古风汉服互勉", tag:"互勉", info:"古风 · 杭州西湖 · 6月22日", price:"免费", user:"苏晴", apply:8, mutual:true, avatarBg:"linear-gradient(135deg,#A78BFA,#8B5CF6)" },
-  { title:"婚纱照拍摄", tag:"¥2000", info:"婚纱 · 上海外滩 · 6月25日", price:"¥2k", user:"陈先生", apply:5, mutual:false, avatarBg:"linear-gradient(135deg,#38BDF8,#0EA5E9)" },
+  { id: 1, title: "周末三里屯情绪人像", price: "¥500", meta: "北京朝阳 · 6 月 20 日 · 约 3 小时", roles: ["摄影师", "化妆师"], applicants: 12, mutual: false, icon: "i-lucide-aperture", iconBackground: "#fff1f2", iconColor: "#f43f5e" },
+  { id: 2, title: "西湖宋制汉服互勉创作", price: "互勉", meta: "杭州西湖 · 6 月 22 日 · 下午", roles: ["摄影师", "模特"], applicants: 8, mutual: true, icon: "i-lucide-flower-2", iconBackground: "#f0fdf4", iconColor: "#059669" },
+  { id: 3, title: "城市品牌夏季 Lookbook", price: "¥2000", meta: "上海静安 · 6 月 25 日 · 全天", roles: ["模特", "造型师"], applicants: 5, mutual: false, icon: "i-lucide-sparkles", iconBackground: "#fffbeb", iconColor: "#d97706" },
 ];
-const works = [
-  { title:"夏日清新人像", author:"林默", likes:326, bg:"linear-gradient(135deg,#FBCFE8,#F9A8D4)", avatarBg:"linear-gradient(135deg,#F472B6,#EC4899)" },
-  { title:"汉服古风写真", author:"苏晴", likes:218, bg:"linear-gradient(135deg,#DDD6FE,#C4B5FD)", avatarBg:"linear-gradient(135deg,#A78BFA,#8B5CF6)" },
-  { title:"城市夜景街拍", author:"陈风", likes:156, bg:"linear-gradient(135deg,#BAE6FD,#7DD3FC)", avatarBg:"linear-gradient(135deg,#38BDF8,#0EA5E9)" },
-  { title:"日系胶片风格", author:"叶知秋", likes:412, bg:"linear-gradient(135deg,#A7F3D0,#6EE7B7)", avatarBg:"linear-gradient(135deg,#34D399,#10B981)" },
+
+const topics = [
+  { title: "城市夜色", subtitle: "霓虹、街道与情绪表达", cover: "linear-gradient(135deg,#18181b,#312e81 55%,#f43f5e)" },
+  { title: "东方新叙事", subtitle: "汉服与现代审美的碰撞", cover: "linear-gradient(135deg,#064e3b,#10b981 55%,#fef3c7)" },
+  { title: "胶片日常", subtitle: "记录真实而松弛的瞬间", cover: "linear-gradient(135deg,#78350f,#f59e0b 55%,#fef3c7)" },
 ];
+
+function open(path) {
+  proxy.$tab.navigateTo(path);
+}
 </script>
