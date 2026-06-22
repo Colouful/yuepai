@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install ruff pydantic
-      - run: python -m compileall -q module_yuepai
-      - run: ruff check module_yuepai tests/test_yuepai_core_vo.py
+      - run: python -m pip install --quiet ruff pydantic pydantic-settings python-dotenv
+      - run: python -m compileall -q module_yuepai alembic/versions
+      - run: ruff check module_yuepai tests/test_yuepai_core_vo.py --output-format concise
       - run: python -m unittest discover -s tests -p "test_yuepai_*.py" -v
