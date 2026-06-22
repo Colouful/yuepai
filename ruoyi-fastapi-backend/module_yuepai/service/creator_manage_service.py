@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from module_yuepai.entity.do.creator_do import YpCreatorProfile, YpCreatorWork, YpServicePackage
@@ -25,6 +25,63 @@ class CreatorManageService:
         if creator.user_id != user_id:
             raise HTTPException(status_code=403, detail='无权操作该创作者资料')
         return creator
+
+    @classmethod
+    async def my_profiles(cls, db: AsyncSession, user_id: int) -> list[dict]:
+        rows = (
+            await db.scalars(
+                select(YpCreatorProfile)
+                .where(YpCreatorProfile.user_id == user_id)
+                .order_by(YpCreatorProfile.create_time.asc())
+            )
+        ).all()
+        result = []
+        for row in rows:
+            item = CreatorPublicService.profile_dict(row)
+            item['workCount'] = int(
+                await db.scalar(
+                    select(func.count()).select_from(YpCreatorWork).where(YpCreatorWork.creator_id == row.creator_id)
+                )
+                or 0
+            )
+            item['packageCount'] = int(
+                await db.scalar(
+                    select(func.count()).select_from(YpServicePackage).where(
+                        YpServicePackage.creator_id == row.creator_id
+                    )
+                )
+                or 0
+            )
+            result.append(item)
+        return result
+
+    @classmethod
+    async def my_content(cls, db: AsyncSession, user_id: int, creator_id: int) -> dict:
+        await cls._owned_creator(db, creator_id, user_id)
+        works = (
+            await db.scalars(
+                select(YpCreatorWork)
+                .where(YpCreatorWork.creator_id == creator_id)
+                .order_by(YpCreatorWork.create_time.desc())
+            )
+        ).all()
+        packages = (
+            await db.scalars(
+                select(YpServicePackage)
+                .where(YpServicePackage.creator_id == creator_id)
+                .order_by(YpServicePackage.create_time.desc())
+            )
+        ).all()
+        return {
+            'works': [
+                {**WorkPublicService.work_dict(row), 'status': row.status, 'auditStatus': row.audit_status}
+                for row in works
+            ],
+            'packages': [
+                {**CreatorPublicService.package_dict(row), 'status': row.status, 'auditStatus': row.audit_status}
+                for row in packages
+            ],
+        }
 
     @classmethod
     async def upsert_profile(cls, db: AsyncSession, user_id: int, payload: CreatorProfileUpsert) -> dict:
