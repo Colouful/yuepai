@@ -11,6 +11,7 @@ from common.aspect.pre_auth import CurrentUserDependency, PreAuthDependency
 from common.router import APIRouterPro
 from module_admin.entity.vo.user_vo import CurrentUserModel
 from module_yuepai.entity.vo.core_vo import ApplicationCreate, DemandCreate
+from module_yuepai.service.demand_query_service import DemandQueryService
 from module_yuepai.service.demand_service import DemandService
 from utils.response_util import ResponseUtil
 
@@ -25,10 +26,25 @@ class DemandAuditRequest(BaseModel):
 async def list_demands(
     query_db: Annotated[AsyncSession, DBSessionDependency()],
     city_code: Annotated[str | None, Query(alias='cityCode', max_length=20)] = None,
+    demand_type: Annotated[str | None, Query(alias='demandType', max_length=32)] = None,
+    budget_type: Annotated[str | None, Query(alias='budgetType', max_length=20)] = None,
+    role_code: Annotated[str | None, Query(alias='roleCode', max_length=32)] = None,
+    keyword: Annotated[str | None, Query(max_length=80)] = None,
+    sort_by: Annotated[str, Query(alias='sortBy', pattern='^(latest|deadline|shootAt|budget)$')] = 'latest',
     page_num: Annotated[int, Query(alias='pageNum', ge=1)] = 1,
     page_size: Annotated[int, Query(alias='pageSize', ge=1, le=50)] = 20,
 ) -> Response:
-    result = await DemandService.list_public(query_db, city_code, page_num, page_size)
+    result = await DemandQueryService.list_public(
+        query_db,
+        city_code,
+        demand_type,
+        budget_type,
+        role_code,
+        keyword,
+        sort_by,
+        page_num,
+        page_size,
+    )
     return ResponseUtil.success(rows=result['rows'], dict_content={'total': result['total']})
 
 
