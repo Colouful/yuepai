@@ -1,44 +1,20 @@
 <template>
-  <view class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-violet-50">
-    <view class="bg-white/80 backdrop-blur-sm px-5 pt-12 pb-4 flex items-center">
-      <view class="i-lucide-arrow-left text-slate-700 text-xl mr-3" @click="goBack"></view>
-      <text class="text-lg font-bold text-slate-800">评价服务</text>
-    </view>
-    <view class="px-5 pt-4 pb-24 space-y-4">
-      <view class="rounded-2xl bg-white/80 backdrop-blur-sm p-5 shadow-sm">
-        <view class="flex items-center space-x-3 mb-4">
-          <view class="size-12 rounded-xl bg-gradient-to-br from-rose-200 to-violet-200"></view>
-          <view><text class="text-sm font-bold text-slate-800">人像写真拍摄</text><text class="text-xs text-slate-400 block">摄影师: 林默</text></view>
-        </view>
-        <view v-for="dim in dimensions" :key="dim.name" class="flex items-center justify-between mb-3">
-          <text class="text-xs text-slate-500 w-20">{{ dim.name }}</text>
-          <view class="flex space-x-1">
-            <view v-for="i in 5" :key="i" class="i-lucide-star text-lg transition-colors"
-              :class="i <= dim.score ? 'text-amber-400' : 'text-slate-200'" @click="dim.score = i"></view>
-          </view>
-        </view>
-      </view>
-      <view class="rounded-2xl bg-white/80 backdrop-blur-sm p-5 shadow-sm">
-        <text class="text-sm font-semibold text-slate-700 block mb-2">评价内容</text>
-        <textarea placeholder="分享你的拍摄体验..." placeholder-class="text-slate-300"
-          class="h-28 w-full rounded-xl bg-rose-50/50 p-4 text-sm text-slate-700 ring-1 ring-rose-100"></textarea>
-      </view>
-      <button class="h-12 w-full rounded-2xl bg-gradient-to-r from-rose-400 to-violet-400 text-white font-semibold shadow-lg shadow-rose-200/50 active:scale-[0.98] transition-transform">
-        提交评价
-      </button>
+  <view class="yp-page min-h-screen pb-24">
+    <view :style="{height:statusBarH+'px'}"></view>
+    <view class="px-5 pt-3 pb-3 flex items-center justify-between"><view class="size-10 rounded-full bg-white border border-black/5 flex items-center justify-center" @click="goBack"><view class="i-lucide-arrow-left text-zinc-700 text-lg"></view></view><text class="text-base font-black text-zinc-900">评价服务</text><view class="w-10"></view></view>
+    <view v-if="loading" class="px-5 pt-4 space-y-4"><view class="yp-card h-36 animate-pulse bg-white/70"></view><view class="yp-card h-64 animate-pulse bg-white/70"></view></view>
+    <view v-else-if="errorMessage" class="px-8 pt-24 text-center"><text class="text-base font-black text-zinc-800 block">评价页面加载失败</text><text class="text-xs text-zinc-400 block mt-2">{{ errorMessage }}</text></view>
+    <view v-else-if="order" class="px-5 pt-4 space-y-4">
+      <view class="yp-card p-4"><view class="flex items-center"><view class="size-14 rounded-2xl bg-zinc-900 flex items-center justify-center"><view class="i-lucide-camera text-white text-xl"></view></view><view class="flex-1 min-w-0 ml-3"><text class="text-sm font-black text-zinc-900 block truncate">{{ order.serviceSnapshot?.title||'约拍服务' }}</text><text class="text-xs text-zinc-400 block mt-1">订单 {{ order.orderNo }}</text></view><text class="text-sm font-black text-rose-500">¥{{ money(order.paidAmount) }}</text></view></view>
+      <view class="yp-card p-4"><text class="yp-section-title block mb-4">服务评分</text><view v-for="item in dimensions" :key="item.key" class="flex items-center justify-between py-3 border-b border-black/5 last:border-b-0"><view><text class="text-xs font-bold text-zinc-700 block">{{ item.label }}</text><text class="text-[9px] text-zinc-400 block mt-1">{{ item.hint }}</text></view><view class="flex space-x-1"><view v-for="i in 5" :key="i" class="i-lucide-star text-xl" :class="i<=item.score?'fill-amber-400 text-amber-400':'text-zinc-200'" @click="item.score=i"></view></view></view></view>
+      <view class="yp-card p-4"><view class="flex items-center justify-between mb-2"><text class="yp-section-title">评价内容</text><text class="text-[10px] text-zinc-400">{{ content.length }}/1000</text></view><textarea v-model="content" maxlength="1000" placeholder="分享服务体验、沟通、拍摄过程和交付质量，至少5个字" placeholder-class="text-zinc-300" class="h-32 w-full rounded-2xl bg-zinc-50 p-4 text-sm text-zinc-900" /></view>
+      <view class="rounded-2xl bg-amber-50 p-4 flex items-start"><view class="i-lucide-shield-check text-amber-600 text-base mr-3"></view><text class="text-[10px] text-amber-700 leading-relaxed">评价仅允许已完成订单提交一次。评价会公开展示，请保持真实、客观并避免泄露个人联系方式。</text></view>
+      <view class="h-12 rounded-2xl flex items-center justify-center text-sm font-black" :class="submitting?'bg-zinc-200 text-zinc-400':'bg-zinc-900 text-white'" @click="submit">{{ submitting?'正在提交…':'提交评价' }}</view>
     </view>
   </view>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
-import { getCurrentInstance } from "vue";
-const { proxy } = getCurrentInstance();
-function goBack() { proxy.$tab.navigateBack(); }
-const dimensions = reactive([
-  { name: "服务态度", score: 5 },
-  { name: "专业能力", score: 5 },
-  { name: "成片质量", score: 5 },
-  { name: "准时程度", score: 5 },
-  { name: "性价比", score: 4 },
-]);
+import { getCurrentInstance,reactive,ref } from "vue";import { onLoad } from "@dcloudio/uni-app";import { getOrder } from "@/api/yuepai/core";import { publishOrderReview } from "@/api/yuepai/review-api";
+const {proxy}=getCurrentInstance();const statusBarH=ref(44),orderId=ref(""),order=ref(null),content=ref(""),loading=ref(true),submitting=ref(false),errorMessage=ref("");const dimensions=reactive([{key:"service",label:"服务专业度",hint:"拍摄准备、专业能力与执行",score:5},{key:"communication",label:"沟通体验",hint:"响应速度、需求理解与配合",score:5},{key:"delivery",label:"交付质量",hint:"成片质量、交付时间与修改",score:5}]);
+onLoad(o=>{orderId.value=o?.id||"";try{statusBarH.value=uni.getSystemInfoSync().statusBarHeight||44}catch(e){console.warn(e)}loadOrder()});async function loadOrder(){loading.value=true;errorMessage.value="";try{const r=await getOrder(orderId.value);order.value=r.data||r;if(order.value.status==="reviewed")throw new Error("该订单已经评价");if(order.value.status!=="completed")throw new Error("订单完成后才能评价")}catch(e){errorMessage.value=e?.message||"网络异常"}finally{loading.value=false}}async function submit(){if(submitting.value)return;if(content.value.trim().length<5)return uni.showToast({title:"评价内容至少5个字",icon:"none"});submitting.value=true;try{const service=dimensions[0].score,communication=dimensions[1].score,delivery=dimensions[2].score,rating=Math.round((service+communication+delivery)/3);await publishOrderReview(orderId.value,{orderId:Number(orderId.value),rating,serviceRating:service,communicationRating:communication,deliveryRating:delivery,content:content.value.trim(),assets:[]});uni.showModal({title:"评价成功",content:"感谢你的真实反馈，评价已展示在创作者详情页。",showCancel:false,success(){proxy.$tab.redirectTo(`/pages/order/detail?id=${orderId.value}`)}})}finally{submitting.value=false}}function money(v){return Number(v||0).toFixed(2)}function goBack(){proxy.$tab.navigateBack()}
 </script>
