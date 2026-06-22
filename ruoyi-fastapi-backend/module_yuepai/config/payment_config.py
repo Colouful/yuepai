@@ -14,6 +14,7 @@ class WechatPaySettings(BaseSettings):
     yuepai_wechat_pay_private_key_path: str = ''
     yuepai_wechat_pay_platform_cert_path: str = ''
     yuepai_wechat_pay_notify_url: str = ''
+    yuepai_wechat_refund_notify_url: str = ''
     yuepai_wechat_pay_base_url: str = 'https://api.mch.weixin.qq.com'
 
     def validate_runtime(self) -> None:
@@ -27,14 +28,19 @@ class WechatPaySettings(BaseSettings):
             'YUEPAI_WECHAT_PAY_PRIVATE_KEY_PATH': self.yuepai_wechat_pay_private_key_path,
             'YUEPAI_WECHAT_PAY_PLATFORM_CERT_PATH': self.yuepai_wechat_pay_platform_cert_path,
             'YUEPAI_WECHAT_PAY_NOTIFY_URL': self.yuepai_wechat_pay_notify_url,
+            'YUEPAI_WECHAT_REFUND_NOTIFY_URL': self.yuepai_wechat_refund_notify_url,
         }
         missing = [name for name, value in required.items() if not value.strip()]
         if missing:
             raise RuntimeError(f'微信支付缺少配置：{", ".join(missing)}')
         if len(self.yuepai_wechat_pay_api_v3_key.encode()) != 32:
             raise RuntimeError('YUEPAI_WECHAT_PAY_API_V3_KEY 必须为 32 字节')
-        if not self.yuepai_wechat_pay_notify_url.startswith('https://'):
-            raise RuntimeError('微信支付回调地址必须使用 HTTPS')
+        for url, label in (
+            (self.yuepai_wechat_pay_notify_url, '支付回调地址'),
+            (self.yuepai_wechat_refund_notify_url, '退款回调地址'),
+        ):
+            if not url.startswith('https://'):
+                raise RuntimeError(f'{label}必须使用 HTTPS')
         for path_value, label in (
             (self.yuepai_wechat_pay_private_key_path, '商户私钥'),
             (self.yuepai_wechat_pay_platform_cert_path, '微信支付平台证书'),
