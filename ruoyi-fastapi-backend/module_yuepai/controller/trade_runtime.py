@@ -1,1 +1,1 @@
-from common.router import APIRouterPro
+# Trade routes will be enabled after payment and refund review.
