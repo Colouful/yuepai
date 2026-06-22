@@ -1,359 +1,62 @@
 {
   "pages": [
-    {
-      "path": "pages/login",
-      "style": {
-        "navigationBarTitleText": "登录"
-      }
-    },
-    {
-      "path": "pages/register",
-      "style": {
-        "navigationBarTitleText": "注册"
-      }
-    },
-    {
-      "path": "pages/demand/index",
-      "style": {
-        "navigationBarTitleText": "需求大厅"
-      }
-    },
-    {
-      "path": "pages/photographer/index",
-      "style": {
-        "navigationBarTitleText": "找摄影师"
-      }
-    },
-    {
-      "path": "pages/model/index",
-      "style": {
-        "navigationBarTitleText": "找模特"
-      }
-    },
-    {
-      "path": "pages/works/index",
-      "style": {
-        "navigationBarTitleText": "作品广场",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/publish/index",
-      "style": {
-        "navigationBarTitleText": "发布约拍",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/feed/index",
-      "style": {
-        "navigationBarTitleText": "动态广场"
-      }
-    },
-    {
-      "path": "pages/order/index",
-      "style": {
-        "navigationBarTitleText": "我的订单"
-      }
-    },
-    {
-      "path": "pages/message/index",
-      "style": {
-        "navigationBarTitleText": "消息中心",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/wallet/index",
-      "style": {
-        "navigationBarTitleText": "我的钱包"
-      }
-    },
-    {
-      "path": "pages/venue/index",
-      "style": {
-        "navigationBarTitleText": "拍摄场地"
-      }
-    },
-    {
-      "path": "pages/activity/index",
-      "style": {
-        "navigationBarTitleText": "摄影活动"
-      }
-    },
-    {
-      "path": "pages/favorite/index",
-      "style": {
-        "navigationBarTitleText": "我的收藏"
-      }
-    },
-    {
-      "path": "pages/index",
-      "style": {
-        "navigationBarTitleText": "RuoYi-FastAPI移动端",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/work/index",
-      "style": {
-        "navigationBarTitleText": "工作台"
-      }
-    },
-    {
-      "path": "pages/mine/index",
-      "style": {
-        "navigationBarTitleText": "我的",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/mine/avatar/index",
-      "style": {
-        "navigationBarTitleText": "修改头像"
-      }
-    },
-    {
-      "path": "pages/mine/info/index",
-      "style": {
-        "navigationBarTitleText": "个人信息"
-      }
-    },
-    {
-      "path": "pages/mine/info/edit",
-      "style": {
-        "navigationBarTitleText": "编辑资料"
-      }
-    },
-    {
-      "path": "pages/mine/pwd/index",
-      "style": {
-        "navigationBarTitleText": "修改密码"
-      }
-    },
-    {
-      "path": "pages/mine/setting/index",
-      "style": {
-        "navigationBarTitleText": "应用设置"
-      }
-    },
-    {
-      "path": "pages/mine/help/index",
-      "style": {
-        "navigationBarTitleText": "常见问题"
-      }
-    },
-    {
-      "path": "pages/mine/about/index",
-      "style": {
-        "navigationBarTitleText": "关于我们"
-      }
-    },
-    {
-      "path": "pages/common/agreement/index",
-      "style": {
-        "navigationBarTitleText": "用户协议"
-      }
-    },
-    {
-      "path": "pages/common/privacy/index",
-      "style": {
-        "navigationBarTitleText": "隐私协议"
-      }
-    },
-    {
-      "path": "pages/common/webview/index",
-      "style": {
-        "navigationBarTitleText": "浏览网页"
-      }
-    },
-    {
-      "path": "pages/common/textview/index",
-      "style": {
-        "navigationBarTitleText": "浏览文本"
-      }
-    },
-    {
-      "path": "pages/role-select/index",
-      "style": {
-        "navigationBarTitleText": "选择身份"
-      }
-    },
-    {
-      "path": "pages/certify/index",
-      "style": {
-        "navigationBarTitleText": "实名认证"
-      }
-    },
-    {
-      "path": "pages/photographer/detail",
-      "style": {
-        "navigationBarTitleText": "摄影师详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/model/detail",
-      "style": {
-        "navigationBarTitleText": "模特详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/demand/detail",
-      "style": {
-        "navigationBarTitleText": "需求详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/order/detail",
-      "style": {
-        "navigationBarTitleText": "订单详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/order/confirm",
-      "style": {
-        "navigationBarTitleText": "确认订单",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/order/deliver",
-      "style": {
-        "navigationBarTitleText": "作品验收",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/order/review",
-      "style": {
-        "navigationBarTitleText": "评价服务",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/chat/index",
-      "style": {
-        "navigationBarTitleText": "在线聊天",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/quote/index",
-      "style": {
-        "navigationBarTitleText": "报价详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/schedule/index",
-      "style": {
-        "navigationBarTitleText": "档期管理",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/feed/publish",
-      "style": {
-        "navigationBarTitleText": "发布动态",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/coupon/index",
-      "style": {
-        "navigationBarTitleText": "我的优惠券"
-      }
-    },
-    {
-      "path": "pages/member/index",
-      "style": {
-        "navigationBarTitleText": "会员中心"
-      }
-    },
-    {
-      "path": "pages/follow/index",
-      "style": {
-        "navigationBarTitleText": "我的关注"
-      }
-    },
-    {
-      "path": "pages/history/index",
-      "style": {
-        "navigationBarTitleText": "浏览记录"
-      }
-    },
-    {
-      "path": "pages/report/index",
-      "style": {
-        "navigationBarTitleText": "举报投诉",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/refund/index",
-      "style": {
-        "navigationBarTitleText": "退款售后",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/service/index",
-      "style": {
-        "navigationBarTitleText": "在线客服",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/creator/index",
-      "style": {
-        "navigationBarTitleText": "创作者工作台"
-      }
-    },
-    {
-      "path": "pages/city/index",
-      "style": {
-        "navigationBarTitleText": "选择城市",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/search/index",
-      "style": {
-        "navigationBarTitleText": "搜索",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/venue/detail",
-      "style": {
-        "navigationBarTitleText": "场地详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/activity/detail",
-      "style": {
-        "navigationBarTitleText": "活动详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/demand-manage/index",
-      "style": {
-        "navigationBarTitleText": "约拍管理"
-      }
-    },
-    {
-      "path": "pages/profile/index",
-      "style": {
-        "navigationBarTitleText": "个人主页",
-        "navigationStyle": "custom"
-      }
-    }
+    { "path": "pages/login", "style": { "navigationBarTitleText": "登录" } },
+    { "path": "pages/register", "style": { "navigationBarTitleText": "注册" } },
+    { "path": "pages/demand/index", "style": { "navigationBarTitleText": "需求大厅" } },
+    { "path": "pages/photographer/index", "style": { "navigationBarTitleText": "找摄影师" } },
+    { "path": "pages/model/index", "style": { "navigationBarTitleText": "找模特" } },
+    { "path": "pages/works/index", "style": { "navigationBarTitleText": "作品广场", "navigationStyle": "custom" } },
+    { "path": "pages/works/detail", "style": { "navigationBarTitleText": "作品详情", "navigationStyle": "custom" } },
+    { "path": "pages/package/detail", "style": { "navigationBarTitleText": "服务套餐", "navigationStyle": "custom" } },
+    { "path": "pages/publish/index", "style": { "navigationBarTitleText": "发布约拍", "navigationStyle": "custom" } },
+    { "path": "pages/feed/index", "style": { "navigationBarTitleText": "动态广场" } },
+    { "path": "pages/order/index", "style": { "navigationBarTitleText": "我的订单" } },
+    { "path": "pages/message/index", "style": { "navigationBarTitleText": "消息中心", "navigationStyle": "custom" } },
+    { "path": "pages/wallet/index", "style": { "navigationBarTitleText": "我的钱包" } },
+    { "path": "pages/venue/index", "style": { "navigationBarTitleText": "拍摄场地" } },
+    { "path": "pages/activity/index", "style": { "navigationBarTitleText": "摄影活动" } },
+    { "path": "pages/favorite/index", "style": { "navigationBarTitleText": "我的收藏" } },
+    { "path": "pages/index", "style": { "navigationBarTitleText": "RuoYi-FastAPI移动端", "navigationStyle": "custom" } },
+    { "path": "pages/work/index", "style": { "navigationBarTitleText": "工作台" } },
+    { "path": "pages/mine/index", "style": { "navigationBarTitleText": "我的", "navigationStyle": "custom" } },
+    { "path": "pages/mine/avatar/index", "style": { "navigationBarTitleText": "修改头像" } },
+    { "path": "pages/mine/info/index", "style": { "navigationBarTitleText": "个人信息" } },
+    { "path": "pages/mine/info/edit", "style": { "navigationBarTitleText": "编辑资料" } },
+    { "path": "pages/mine/pwd/index", "style": { "navigationBarTitleText": "修改密码" } },
+    { "path": "pages/mine/setting/index", "style": { "navigationBarTitleText": "应用设置" } },
+    { "path": "pages/mine/help/index", "style": { "navigationBarTitleText": "常见问题" } },
+    { "path": "pages/mine/about/index", "style": { "navigationBarTitleText": "关于我们" } },
+    { "path": "pages/common/agreement/index", "style": { "navigationBarTitleText": "用户协议" } },
+    { "path": "pages/common/privacy/index", "style": { "navigationBarTitleText": "隐私协议" } },
+    { "path": "pages/common/webview/index", "style": { "navigationBarTitleText": "浏览网页" } },
+    { "path": "pages/common/textview/index", "style": { "navigationBarTitleText": "浏览文本" } },
+    { "path": "pages/role-select/index", "style": { "navigationBarTitleText": "选择身份" } },
+    { "path": "pages/certify/index", "style": { "navigationBarTitleText": "实名认证" } },
+    { "path": "pages/photographer/detail", "style": { "navigationBarTitleText": "摄影师详情", "navigationStyle": "custom" } },
+    { "path": "pages/model/detail", "style": { "navigationBarTitleText": "模特详情", "navigationStyle": "custom" } },
+    { "path": "pages/demand/detail", "style": { "navigationBarTitleText": "需求详情", "navigationStyle": "custom" } },
+    { "path": "pages/order/detail", "style": { "navigationBarTitleText": "订单详情", "navigationStyle": "custom" } },
+    { "path": "pages/order/confirm", "style": { "navigationBarTitleText": "确认订单", "navigationStyle": "custom" } },
+    { "path": "pages/order/deliver", "style": { "navigationBarTitleText": "作品验收", "navigationStyle": "custom" } },
+    { "path": "pages/order/review", "style": { "navigationBarTitleText": "评价服务", "navigationStyle": "custom" } },
+    { "path": "pages/chat/index", "style": { "navigationBarTitleText": "在线聊天", "navigationStyle": "custom" } },
+    { "path": "pages/quote/index", "style": { "navigationBarTitleText": "报价详情", "navigationStyle": "custom" } },
+    { "path": "pages/schedule/index", "style": { "navigationBarTitleText": "档期管理", "navigationStyle": "custom" } },
+    { "path": "pages/feed/publish", "style": { "navigationBarTitleText": "发布动态", "navigationStyle": "custom" } },
+    { "path": "pages/coupon/index", "style": { "navigationBarTitleText": "我的优惠券" } },
+    { "path": "pages/member/index", "style": { "navigationBarTitleText": "会员中心" } },
+    { "path": "pages/follow/index", "style": { "navigationBarTitleText": "我的关注" } },
+    { "path": "pages/history/index", "style": { "navigationBarTitleText": "浏览记录" } },
+    { "path": "pages/report/index", "style": { "navigationBarTitleText": "举报投诉", "navigationStyle": "custom" } },
+    { "path": "pages/refund/index", "style": { "navigationBarTitleText": "退款售后", "navigationStyle": "custom" } },
+    { "path": "pages/service/index", "style": { "navigationBarTitleText": "在线客服", "navigationStyle": "custom" } },
+    { "path": "pages/creator/index", "style": { "navigationBarTitleText": "创作者工作台" } },
+    { "path": "pages/city/index", "style": { "navigationBarTitleText": "选择城市", "navigationStyle": "custom" } },
+    { "path": "pages/search/index", "style": { "navigationBarTitleText": "搜索", "navigationStyle": "custom" } },
+    { "path": "pages/venue/detail", "style": { "navigationBarTitleText": "场地详情", "navigationStyle": "custom" } },
+    { "path": "pages/activity/detail", "style": { "navigationBarTitleText": "活动详情", "navigationStyle": "custom" } },
+    { "path": "pages/demand-manage/index", "style": { "navigationBarTitleText": "约拍管理" } },
+    { "path": "pages/profile/index", "style": { "navigationBarTitleText": "个人主页", "navigationStyle": "custom" } }
   ],
   "tabBar": {
     "color": "#94a3b8",
@@ -361,41 +64,16 @@
     "borderStyle": "white",
     "backgroundColor": "rgba(255,255,255,0.95)",
     "list": [
-      {
-        "pagePath": "pages/index",
-        "iconPath": "static/images/tabbar/home.png",
-        "selectedIconPath": "static/images/tabbar/home-active.png",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/works/index",
-        "iconPath": "static/images/tabbar/discover.png",
-        "selectedIconPath": "static/images/tabbar/discover-active.png",
-        "text": "发现"
-      },
-      {
-        "pagePath": "pages/publish/index",
-        "iconPath": "static/images/tabbar/publish.png",
-        "selectedIconPath": "static/images/tabbar/publish-active.png",
-        "text": "发布"
-      },
-      {
-        "pagePath": "pages/message/index",
-        "iconPath": "static/images/tabbar/message.png",
-        "selectedIconPath": "static/images/tabbar/message-active.png",
-        "text": "消息"
-      },
-      {
-        "pagePath": "pages/mine/index",
-        "iconPath": "static/images/tabbar/mine.png",
-        "selectedIconPath": "static/images/tabbar/mine-active.png",
-        "text": "我的"
-      }
+      { "pagePath": "pages/index", "iconPath": "static/images/tabbar/home.png", "selectedIconPath": "static/images/tabbar/home-active.png", "text": "首页" },
+      { "pagePath": "pages/works/index", "iconPath": "static/images/tabbar/discover.png", "selectedIconPath": "static/images/tabbar/discover-active.png", "text": "发现" },
+      { "pagePath": "pages/publish/index", "iconPath": "static/images/tabbar/publish.png", "selectedIconPath": "static/images/tabbar/publish-active.png", "text": "发布" },
+      { "pagePath": "pages/message/index", "iconPath": "static/images/tabbar/message.png", "selectedIconPath": "static/images/tabbar/message-active.png", "text": "消息" },
+      { "pagePath": "pages/mine/index", "iconPath": "static/images/tabbar/mine.png", "selectedIconPath": "static/images/tabbar/mine-active.png", "text": "我的" }
     ]
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "RuoYi",
+    "navigationBarTitleText": "91约拍Pro",
     "navigationBarBackgroundColor": "#FFFFFF"
   }
 }
